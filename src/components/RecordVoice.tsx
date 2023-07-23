@@ -1,18 +1,19 @@
-import React, { ChangeEvent } from 'react';
+import { ChangeEvent, useState } from 'react';
+import useRecordVoice from '../hooks/useRecordVoice';
+import { useAppDispatch } from '../hooks/reduxHooks';
+import { promptActions } from '../store/slices/promptSlice';
+import { LANGUAGES } from '../utils/constants';
 
-interface RecordVoiceProps {
-  handleChangeSelect: (event: ChangeEvent<HTMLSelectElement>) => void;
-  handleStartRecordVoice: () => void;
-  isRecording: boolean;
-  recordedText: string;
-}
+const RecordVoice = () => {
+  const dispatch = useAppDispatch();
+  const [lang, setLang] = useState<string>('');
+  const { recordedText, isRecording, handleStartRecordVoice } = useRecordVoice({ lang: lang });
 
-const RecordVoice: React.FC<RecordVoiceProps> = ({
-  handleChangeSelect,
-  handleStartRecordVoice,
-  isRecording,
-  recordedText,
-}) => {
+  const handleChangeSelect = (event: ChangeEvent<HTMLSelectElement>) => {
+    setLang(event.target.value);
+    dispatch(promptActions.setLang(LANGUAGES[event.target.value as keyof typeof LANGUAGES]));
+  };
+
   return (
     <div className="flex flex-col gap-4 items-center">
       <select onChange={handleChangeSelect}>
@@ -29,7 +30,7 @@ const RecordVoice: React.FC<RecordVoiceProps> = ({
       >
         {isRecording ? '⏺️ Recording...' : '️🎙️ Record Voice'}
       </button>
-      <div className="max-w-md text-white/80">{recordedText}</div>
+      {recordedText && <div className="max-w-md text-white/80">{recordedText}</div>}
     </div>
   );
 };
