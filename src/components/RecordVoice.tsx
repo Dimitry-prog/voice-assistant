@@ -1,14 +1,18 @@
-import { ChangeEvent, useState } from 'react';
-import useRecordVoice from '../hooks/useRecordVoice';
+import React, { ChangeEvent } from 'react';
 
-const RecordVoice = () => {
-  const [lang, setLang] = useState<string>('');
-  const { recordedText, isRecording, handleStartRecordVoice } = useRecordVoice({ lang: lang });
+interface RecordVoiceProps {
+  handleChangeSelect: (event: ChangeEvent<HTMLSelectElement>) => void;
+  handleStartRecordVoice: () => void;
+  isRecording: boolean;
+  recordedText: string;
+}
 
-  const handleChangeSelect = (event: ChangeEvent<HTMLSelectElement>) => {
-    setLang(event.target.value);
-  };
-
+const RecordVoice: React.FC<RecordVoiceProps> = ({
+  handleChangeSelect,
+  handleStartRecordVoice,
+  isRecording,
+  recordedText,
+}) => {
   return (
     <div className="flex flex-col gap-4 items-center">
       <select onChange={handleChangeSelect}>
