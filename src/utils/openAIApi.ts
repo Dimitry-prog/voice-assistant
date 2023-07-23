@@ -1,5 +1,5 @@
 import { apiUrl } from './constants';
-const apiKey = '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';
+const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 interface IRequestData {
   model: string;
   messages: Array<{
