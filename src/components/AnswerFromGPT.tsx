@@ -1,9 +1,7 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { generateChatCompletion } from '../utils/openAIApi';
 import Form from './FormTextarea/FormTextarea';
 import Answer from './Answer/Answer';
-
-const userText = 'Привет';
 
 interface IRequestData {
   model: string;
@@ -14,16 +12,24 @@ interface IRequestData {
   temperature: number;
   max_tokens: number;
 }
+interface AnswerFromGPTProps {
+  lang: string;
+  recordedText: string;
+}
 
-const AnswerFromGPT = () => {
-  const [text, setText] = useState<string>(userText);
+const AnswerFromGPT: React.FC<AnswerFromGPTProps> = ({ lang, recordedText = '' }) => {
+  const [text, setText] = useState<string>('');
   const [isDataLoad, setIsDataLoad] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('');
-  const [lang, setLang] = useState<string>('russian');
+  // const [lang, setLang] = useState<string>('russian');
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
   };
+
+  useEffect(() => {
+    setText(recordedText);
+  }, [recordedText]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     setIsDataLoad(true);
@@ -42,7 +48,7 @@ const AnswerFromGPT = () => {
         },
       ],
       temperature: 0.8,
-      max_tokens: 500,
+      max_tokens: 2048,
     };
 
     generateChatCompletion(requestData)
