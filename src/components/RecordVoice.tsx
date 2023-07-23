@@ -1,12 +1,17 @@
 import { ChangeEvent, useState } from 'react';
 import useRecordVoice from '../hooks/useRecordVoice';
+import { useAppDispatch } from '../hooks/reduxHooks';
+import { promptActions } from '../store/slices/promptSlice';
+import { LANGUAGES } from '../utils/constants';
 
 const RecordVoice = () => {
+  const dispatch = useAppDispatch();
   const [lang, setLang] = useState<string>('');
   const { recordedText, isRecording, handleStartRecordVoice } = useRecordVoice({ lang: lang });
 
   const handleChangeSelect = (event: ChangeEvent<HTMLSelectElement>) => {
     setLang(event.target.value);
+    dispatch(promptActions.setLang(LANGUAGES[event.target.value as keyof typeof LANGUAGES]));
   };
 
   return (
@@ -25,7 +30,7 @@ const RecordVoice = () => {
       >
         {isRecording ? '⏺️ Recording...' : '️🎙️ Record Voice'}
       </button>
-      <div className="max-w-md text-white/80">{recordedText}</div>
+      {recordedText && <div className="max-w-md text-white/80">{recordedText}</div>}
     </div>
   );
 };

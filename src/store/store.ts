@@ -1,7 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { promptReducer } from './slices/promptSlice';
 
 const store = configureStore({
-  reducer: {},
+  reducer: {
+    prompt: promptReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;

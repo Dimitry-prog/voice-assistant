@@ -1,4 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from './reduxHooks';
+import { promptActions } from '../store/slices/promptSlice';
+import { getGPTPrompt } from '../api/promptApi';
+import { REQUEST_OPENAI_DATA } from '../utils/constants';
 
 type UseRecordVoicePropsType = {
   lang: string;
@@ -13,6 +17,8 @@ type UseRecordVoiceReturnType = {
 const useRecordVoice = ({ lang }: UseRecordVoicePropsType): UseRecordVoiceReturnType => {
   const [recordedText, setRecordedText] = useState<string>('');
   const [isRecording, setIsRecording] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const openAiLang = useAppSelector((state) => state.prompt.lang);
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognition: SpeechRecognition = new SpeechRecognition();
 
@@ -20,9 +26,10 @@ const useRecordVoice = ({ lang }: UseRecordVoicePropsType): UseRecordVoiceReturn
   recognition.continuous = false;
   recognition.interimResults = true;
   recognition.maxAlternatives = 1;
+  let text = '';
 
   recognition.onresult = (event: SpeechRecognitionEvent) => {
-    const text = Array.from(event.results)
+    text = Array.from(event.results)
       .map((result) => result[0])
       .map((text) => text.transcript)
       .join('');
@@ -37,6 +44,8 @@ const useRecordVoice = ({ lang }: UseRecordVoicePropsType): UseRecordVoiceReturn
 
   recognition.onend = () => {
     setIsRecording(false);
+    dispatch(promptActions.setUserPrompt(text));
+    dispatch(getGPTPrompt(REQUEST_OPENAI_DATA({ lang: openAiLang, text })));
   };
 
   const handleStartRecordVoice = () => {
