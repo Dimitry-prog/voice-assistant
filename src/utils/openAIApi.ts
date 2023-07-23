@@ -1,5 +1,5 @@
-import { apiUrl, apiKey } from './constants';
-
+import { apiUrl } from './constants';
+const apiKey = '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';
 interface IRequestData {
   model: string;
   messages: Array<{
