@@ -22,6 +22,6 @@ export const REQUEST_OPENAI_DATA = ({
   max_tokens: 500,
 });
 export const LANGUAGES = {
-  'en-US': 'english',
-  'ru-RU': 'russian',
+  english: 'en-US',
+  russian: 'ru-RU',
 };

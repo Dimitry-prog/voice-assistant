@@ -7,11 +7,13 @@ import { LANGUAGES } from '../utils/constants';
 const RecordVoice = () => {
   const dispatch = useAppDispatch();
   const [lang, setLang] = useState<string>('');
-  const { recordedText, isRecording, handleStartRecordVoice } = useRecordVoice({ lang: lang });
+  const { recordedText, isRecording, handleStartRecordVoice } = useRecordVoice({
+    lang: LANGUAGES[lang as keyof typeof LANGUAGES],
+  });
 
   const handleChangeSelect = (event: ChangeEvent<HTMLSelectElement>) => {
     setLang(event.target.value);
-    dispatch(promptActions.setLang(LANGUAGES[event.target.value as keyof typeof LANGUAGES]));
+    dispatch(promptActions.setLang(event.target.value));
   };
 
   return (
@@ -20,8 +22,8 @@ const RecordVoice = () => {
         <option value="" disabled>
           Choose language
         </option>
-        <option value="en-US">English</option>
-        <option value="ru-RU">Russian</option>
+        <option value="english">English</option>
+        <option value="russian">Russian</option>
       </select>
       <button
         onClick={handleStartRecordVoice}

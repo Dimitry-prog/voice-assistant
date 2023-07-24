@@ -1,5 +1,6 @@
 import AnswerFromGPT from './components/AnswerFromGPT';
 import RecordVoice from './components/RecordVoice';
+import AnswerGptByVoice from './components/AnswerGPTByVoice';
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
       <h1 className="text-3xl font-bold text-white/90 underline">Your Voice Assistant</h1>
       <RecordVoice />
       <AnswerFromGPT />
+      <AnswerGptByVoice />
     </div>
   );
 }

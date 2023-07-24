@@ -60,7 +60,7 @@ const useRecordVoice = ({ lang }: UseRecordVoicePropsType): UseRecordVoiceReturn
     return () => {
       recognition.abort();
     };
-  }, [SpeechRecognition, lang]);
+  }, [SpeechRecognition]);
 
   return {
     recordedText,
