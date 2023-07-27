@@ -24,9 +24,9 @@ const initialState: PromptStateType = {
       end: '',
     },
     role: {
-      frontend: '',
-      backend: '',
-      designer: '',
+      frontend: 0,
+      backend: 0,
+      designer: 0,
     },
   },
 };
