@@ -45,3 +45,20 @@ export type RoleWithCount = {
   role: string;
   count: number;
 };
+
+export type GPTConfigType = {
+  date: GPTConfigDateType;
+  role: GPTConfigRoleType;
+};
+
+export type GPTConfigDateType = {
+  start: string;
+  days: string | number;
+  end: string;
+};
+
+export type GPTConfigRoleType = {
+  frontend: number;
+  backend: number;
+  designer: number;
+};

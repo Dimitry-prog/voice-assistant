@@ -5,7 +5,7 @@ import ExportDropdown from './ExportDropdown';
 const TodoCards = () => {
   return (
     <>
-      <div className="mt-28 mb-2 min-h-[450px] border">
+      <div className="mb-2 min-h-[450px] border">
         <ul>
           <TodoCard />
           <TodoCard />

@@ -1,10 +1,9 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import useRecordVoice from '../hooks/useRecordVoice';
-import { useAppDispatch } from '../hooks/reduxHooks';
+import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { promptActions } from '../store/slices/promptSlice';
-import { LANGUAGES } from '../utils/constants';
+import { LANGUAGES, REQUEST_OPENAI_DATA } from '../utils/constants';
 import { getGPTPrompt } from '../api/promptApi';
-import { REQUEST_OPENAI_DATA } from '../utils/constants';
 
 import microUrl from '../images/micro-svg.svg';
 
@@ -15,11 +14,23 @@ const TodoForm = () => {
   const { recordedText, isRecording, handleStartRecordVoice } = useRecordVoice({
     lang: LANGUAGES[lang as keyof typeof LANGUAGES],
   });
+  const gptConfig = useAppSelector((state) => state.prompt.gptConfig);
 
+  const gptPromptDate = Object.entries(gptConfig.date)
+    .map(([key, value]) => `${key}: ${value}`)
+    .join(', ');
+  const gptPromptRole = Object.entries(gptConfig.role)
+    .map(([key, value]) => `${key}: ${value}`)
+    .join(', ');
+
+  const gptPrompt = `${gptPromptDate} ${gptPromptRole}`;
   const handleChangeSelect = (event: ChangeEvent<HTMLSelectElement>) => {
     setLang(event.target.value);
     dispatch(promptActions.setLang(event.target.value));
   };
+
+  const returnAnswer =
+    "Ответ верни в таком формате [{role: 'frontend', start: '2023-07-27', end: '2023-07-28', description: 'some text', cardName: 'some name', },]";
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -32,7 +43,14 @@ const TodoForm = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    dispatch(getGPTPrompt(REQUEST_OPENAI_DATA({ lang, text })));
+    dispatch(
+      getGPTPrompt(
+        REQUEST_OPENAI_DATA({
+          lang,
+          text: text + gptPrompt + returnAnswer,
+        })
+      )
+    );
   };
 
   return (

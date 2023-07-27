@@ -1,10 +1,30 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import arrowDownUrl from '../images/fe_arrow-down.svg';
+import { GPTConfigDateType } from '../types/promptTypes';
+import { useAppDispatch } from '../hooks/reduxHooks';
+import { promptActions } from '../store/slices/promptSlice';
 
 const DataDropdown = () => {
+  const dispatch = useAppDispatch();
   const [dropdownState, setDropdownState] = useState<{ open: boolean }>({ open: false });
+
+  const [dateValues, setDateValues] = useState<GPTConfigDateType>({
+    start: '',
+    end: '',
+    days: '',
+  });
+
   const handleDropdownClick = (): void => setDropdownState({ open: !dropdownState.open });
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setDateValues({ ...dateValues, [name]: value });
+  };
+
+  useEffect(() => {
+    dispatch(promptActions.setGptDateConfig(dateValues));
+  }, [dateValues]);
 
   return (
     <div className="inline-block w-52 mr-4">
@@ -29,10 +49,13 @@ const DataDropdown = () => {
                 <label>
                   Дата начала
                   <input
+                    value={dateValues.start}
+                    onChange={handleChange}
                     className="w-full rounded"
                     type="date"
                     list="dateList"
                     id="datetimeInput"
+                    name="start"
                   />
                 </label>
               </li>
@@ -40,10 +63,13 @@ const DataDropdown = () => {
                 <label>
                   Дней на разработку
                   <input
+                    value={dateValues.days}
+                    onChange={handleChange}
                     className="w-full rounded"
                     type="text"
                     list="dateList"
                     id="datetimeInput"
+                    name="days"
                   />
                 </label>
               </li>
@@ -51,10 +77,13 @@ const DataDropdown = () => {
                 <label>
                   Дата завершения
                   <input
+                    value={dateValues.end}
+                    onChange={handleChange}
                     className="w-full rounded"
                     type="date"
                     list="dateList"
                     id="datetimeInput"
+                    name="end"
                   />
                 </label>
               </li>

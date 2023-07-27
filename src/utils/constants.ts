@@ -30,3 +30,9 @@ export const rolesWithCounts: RoleWithCount[] = [
   { role: 'Фронтендер', count: 0 },
   { role: 'Бэкендер', count: 0 },
 ];
+
+export const roles = [
+  { roleRu: 'Дизайнер', roleEn: 'designer', count: 0 },
+  { roleRu: 'Фронтендер', roleEn: 'frontend', count: 0 },
+  { roleRu: 'Бэкендер', roleEn: 'backend', count: 0 },
+];
