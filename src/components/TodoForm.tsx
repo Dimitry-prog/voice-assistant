@@ -12,14 +12,14 @@ const TodoForm = () => {
             autoComplete="off"
             id="todo-item"
             type="text"
-            className="outline-none w-full h-full z-0"
+            className="outline-none w-full h-full z-0 pr-8"
             placeholder="new project"
           />
           <button
             id="voice"
             type="button"
             aria-label="voice-new-item"
-            className="z-10 w-6 h-6 bg-center bg-no-repeat cursor-pointer relative"
+            className="z-10 w-6 h-6 bg-center bg-no-repeat cursor-pointer"
             style={{
               backgroundImage: 'url(' + imgUrl + ')',
             }}
