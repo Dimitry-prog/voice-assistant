@@ -12,3 +12,14 @@ export const getGPTPrompt = createAsyncThunk<
   const request = apiOpenAI.post('', requestData);
   return handleRequest(request, rejectWithValue);
 });
+
+export const getStructureGPTPrompt = createAsyncThunk<
+  ResponseOpenAIType,
+  RequestOpenAIType,
+  {
+    rejectValue: string;
+  }
+>('prompt/getGPTPrompt', async (requestData, { rejectWithValue }) => {
+  const request = apiOpenAI.post('', requestData);
+  return handleRequest(request, rejectWithValue);
+});
