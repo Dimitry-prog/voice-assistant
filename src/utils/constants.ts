@@ -1,4 +1,4 @@
-import { RequestOpenAIDataPropsType, RequestOpenAIType } from '../types/promptTypes';
+import { RequestOpenAIDataPropsType, RequestOpenAIType, RoleWithCount } from '../types/promptTypes';
 
 export const OPENAI_BASE_URL = import.meta.env.VITE_OPENAI_BASE_URL;
 export const OPENAI_CHAT_URL = `${OPENAI_BASE_URL}/chat/completions`;
@@ -27,3 +27,8 @@ export const LANGUAGES = {
   english: 'en-US',
   russian: 'ru-RU',
 };
+export const rolesWithCounts: RoleWithCount[] = [
+  { role: 'Дизайнер', count: 0 },
+  { role: 'Фронтендер', count: 0 },
+  { role: 'Бэкендер', count: 0 },
+];

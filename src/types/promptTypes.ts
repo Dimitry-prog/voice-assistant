@@ -40,3 +40,8 @@ export type Usage = {
   completion_tokens: number;
   total_tokens: number;
 };
+
+export type RoleWithCount = {
+  role: string;
+  count: number;
+};

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const imgUrl = new URL('../images/fe_arrow-down.svg', import.meta.url);
+import arrowDownUrl from '../images/fe_arrow-down.svg';
 
 const ExportDropdown = () => {
   const [dropdownState, setDropdownState] = useState<{ open: boolean }>({ open: false });
@@ -18,7 +18,7 @@ const ExportDropdown = () => {
           <span
             className="w-6 h-6 bg-center bg-no-repeat cursor-pointer"
             style={{
-              backgroundImage: 'url(' + imgUrl + ')',
+              backgroundImage: 'url(' + arrowDownUrl + ')',
             }}
           ></span>
         </button>

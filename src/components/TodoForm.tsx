@@ -1,6 +1,6 @@
 import React from 'react';
 
-const imgUrl = new URL('../images/micro-svg.svg', import.meta.url);
+import microUrl from '../images/micro-svg.svg';
 
 const TodoForm = () => {
   return (
@@ -18,11 +18,10 @@ const TodoForm = () => {
           id="voice"
           type="button"
           aria-label="voice-new-item"
-          className="z-10 w-6 h-6 bg-center bg-no-repeat cursor-pointer"
-          style={{
-            backgroundImage: 'url(' + imgUrl + ')',
-          }}
-        />
+          className="z-10 w-6 h-6 cursor-pointer"
+        >
+          <img src={microUrl} alt="Микрофон" />
+        </button>
       </div>
       <button
         id="add-item"
