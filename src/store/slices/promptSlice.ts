@@ -10,7 +10,7 @@ type PromptStateType = {
 };
 
 const initialState: PromptStateType = {
-  lang: 'english',
+  lang: 'russian',
   userPrompt: '',
   gptPrompt: '',
   status: 'init',

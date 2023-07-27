@@ -13,13 +13,15 @@ const Dropdown = () => {
 
   const handleRoleClickMin = (index: number) => {
     const updatedRoles = [...rolesWithCounts];
-    updatedRoles[index].count = Math.max(0, updatedRoles[index].count - 1);
+    updatedRoles[index].count = Math.max(0, updatedRoles[index].count - 1); //новый массив с роляти и count
+    console.log(updatedRoles);
     setDropdownState({ open: true }); //тригерит ререндер
   };
 
   const handleRoleClickMax = (index: number) => {
     const updatedRoles = [...rolesWithCounts];
     updatedRoles[index].count = updatedRoles[index].count + 1;
+    console.log(updatedRoles);
     setDropdownState({ open: true }); //тригерит ререндер
   };
 
