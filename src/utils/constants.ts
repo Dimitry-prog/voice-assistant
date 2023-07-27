@@ -1,4 +1,4 @@
-import { RequestOpenAIDataPropsType, RequestOpenAIType } from '../types/promptTypes';
+import { RequestOpenAIDataPropsType, RequestOpenAIType, RoleWithCount } from '../types/promptTypes';
 
 export const OPENAI_BASE_URL = import.meta.env.VITE_OPENAI_BASE_URL;
 export const OPENAI_CHAT_URL = `${OPENAI_BASE_URL}/chat/completions`;
@@ -11,17 +11,22 @@ export const REQUEST_OPENAI_DATA = ({
   messages: [
     {
       role: 'system',
-      content: `You will be asked a question, and your task is to generate an answer in ${lang}.`,
+      content: `Разбей данную задачу на несколько более подробных задач.`,
     },
     {
       role: 'user',
-      content: text,
+      content: text + lang,
     },
   ],
   temperature: 0.8,
-  max_tokens: 500,
+  max_tokens: 2480,
 });
 export const LANGUAGES = {
   english: 'en-US',
   russian: 'ru-RU',
 };
+export const rolesWithCounts: RoleWithCount[] = [
+  { role: 'Дизайнер', count: 0 },
+  { role: 'Фронтендер', count: 0 },
+  { role: 'Бэкендер', count: 0 },
+];
