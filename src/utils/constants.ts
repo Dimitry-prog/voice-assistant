@@ -11,15 +11,17 @@ export const REQUEST_OPENAI_DATA = ({
   messages: [
     {
       role: 'system',
-      content: `You will be asked a question, and your task is to generate an answer in ${lang}.`,
+      content: `Разбей данную задачу на несколько более подробных задач.`,
     },
     {
       role: 'user',
-      content: text,
+      content:
+        text +
+        `В команде есть два фронтенд разработчика и два дизайнера. Нужен структурированный ответ с указанием приблизительного времени выполнения каждой задачи.`,
     },
   ],
   temperature: 0.8,
-  max_tokens: 500,
+  max_tokens: 2480,
 });
 export const LANGUAGES = {
   english: 'en-US',

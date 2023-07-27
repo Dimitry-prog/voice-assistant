@@ -33,6 +33,9 @@ const RecordVoice = () => {
         {isRecording ? '⏺️ Recording...' : '️🎙️ Record Voice'}
       </button>
       {recordedText && <div className="max-w-md text-white/80">{recordedText}</div>}
+      <textarea name="qwe" id="qwe">
+        {recordedText}
+      </textarea>
     </div>
   );
 };
