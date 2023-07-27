@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from './reduxHooks';
+import { useAppDispatch } from './reduxHooks';
 import { promptActions } from '../store/slices/promptSlice';
 // import { getGPTPrompt } from '../api/promptApi';
 // import { REQUEST_OPENAI_DATA } from '../utils/constants';
