@@ -11,14 +11,14 @@ export const REQUEST_OPENAI_DATA = ({
   messages: [
     {
       role: 'system',
-      content: `Разбей данную задачу на несколько более подробных задач.`,
+      content: `Break this task into several more detailed tasks. Return the answer only in the form of a code in this format [{role: 'frontend', start: 'start date', end: 'end date', description: 'some text', cardName: 'the essence of the task', },]`,
     },
     {
       role: 'user',
       content: text + lang,
     },
   ],
-  temperature: 0.8,
+  temperature: 0,
   max_tokens: 2480,
 });
 export const LANGUAGES = {

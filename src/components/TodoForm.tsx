@@ -31,17 +31,17 @@ const TodoForm = () => {
   console.log(gptPromptRole);
 
   if (gptConfig.date.start === '' && gptConfig.date.end === '') {
-    gptPromptDate = 'определи сам';
+    gptPromptDate = 'decide for yourself';
   }
   if (
     gptConfig.role.frontend === 0 &&
     gptConfig.role.backend === 0 &&
     gptConfig.role.designer === 0
   ) {
-    gptPromptRole = 'реши сам какие специалисты нужны';
+    gptPromptRole = 'decide for yourself which specialists are needed';
   }
 
-  const returnAnswer = ` .дополнительные условия к ответ: все ответы давай в виде кода. реализация в период ${gptPromptDate} раздели по ролям(role: '') : ${gptPromptRole}. Ответ верни в виде web. Ответ  верни только  в виде кода в таком формате [{role: 'frontend', start: 'дата начала', end: 'дата конца', description: 'some text', cardName: 'суть задачи', },]`;
+  const returnAnswer = ` .additional conditions to the task: implementation in the period ${gptPromptDate} split roles(role: '') : ${gptPromptRole}.`;
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -58,7 +58,7 @@ const TodoForm = () => {
       getGPTPrompt(
         REQUEST_OPENAI_DATA({
           lang,
-          text: text + returnAnswer,
+          text: 'Task:' + text + returnAnswer,
         })
       )
     );
