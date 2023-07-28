@@ -11,7 +11,7 @@ export const REQUEST_OPENAI_DATA = ({
   messages: [
     {
       role: 'system',
-      content: `Break this task into several more detailed tasks. Return the answer only in the form of a code in this format [{role: 'frontend', start: 'start date', end: 'end date', description: 'some text', cardName: 'the essence of the task', },]`,
+      content: `Break this task into several more detailed tasks. Return the answer only in the form of a code in this format [{role: 'frontend', start: 'дата начала', end: 'дата конца', description: 'comment on the task', cardName: 'the essence of the task', },]`,
     },
     {
       role: 'user',

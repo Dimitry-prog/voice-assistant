@@ -31,7 +31,7 @@ const TodoForm = () => {
   console.log(gptPromptRole);
 
   if (gptConfig.date.start === '' && gptConfig.date.end === '') {
-    gptPromptDate = 'decide for yourself';
+    gptPromptDate = 'decide for yourself what deadlines are needed';
   }
   if (
     gptConfig.role.frontend === 0 &&
