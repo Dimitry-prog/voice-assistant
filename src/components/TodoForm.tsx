@@ -16,21 +16,32 @@ const TodoForm = () => {
   });
   const gptConfig = useAppSelector((state) => state.prompt.gptConfig);
 
-  const gptPromptDate = Object.entries(gptConfig.date)
+  let gptPromptDate = Object.entries(gptConfig.date)
     .map(([key, value]) => `${key}: ${value}`)
     .join(', ');
-  const gptPromptRole = Object.entries(gptConfig.role)
+  let gptPromptRole = Object.entries(gptConfig.role)
     .map(([key, value]) => `${key}: ${value}`)
     .join(', ');
 
-  const gptPrompt = `${gptPromptDate} ${gptPromptRole}`;
+  // const gptPrompt = `${gptPromptDate} ${gptPromptRole}`;
   const handleChangeSelect = (event: ChangeEvent<HTMLSelectElement>) => {
     setLang(event.target.value);
     dispatch(promptActions.setLang(event.target.value));
   };
+  console.log(gptPromptRole);
 
-  const returnAnswer =
-    "Ответ верни в таком формате [{role: 'frontend', start: '2023-07-27', end: '2023-07-28', description: 'some text', cardName: 'some name', },]";
+  if (gptConfig.date.start === '' && gptConfig.date.end === '') {
+    gptPromptDate = 'определи сам';
+  }
+  if (
+    gptConfig.role.frontend === 0 &&
+    gptConfig.role.backend === 0 &&
+    gptConfig.role.designer === 0
+  ) {
+    gptPromptRole = 'реши сам какие специалисты нужны';
+  }
+
+  const returnAnswer = ` дополнительные условия к ответ: все ответы давай в виде кода. реализация в период ${gptPromptDate} раздели по ролям(role: '') : ${gptPromptRole}. Ответ верни в виде web. Ответ  верни только  в виде кода в таком формате [{role: 'frontend', start: 'дата начала', end: 'дата конца', description: 'some text', cardName: 'суть задачи', },]`;
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -47,7 +58,7 @@ const TodoForm = () => {
       getGPTPrompt(
         REQUEST_OPENAI_DATA({
           lang,
-          text: text + gptPrompt + returnAnswer,
+          text: text + returnAnswer,
         })
       )
     );
