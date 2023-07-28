@@ -28,6 +28,7 @@ const TodoForm = () => {
     dispatch(promptActions.setLang(event.target.value));
   };
 
+
   if (gptConfig.date.end === '') {
     gptPromptDate += 'decide for yourself now many days need to complete task';
   }
