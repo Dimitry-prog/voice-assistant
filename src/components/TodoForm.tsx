@@ -23,15 +23,13 @@ const TodoForm = () => {
     .map(([key, value]) => `${key}: ${value}`)
     .join(', ');
 
-  // const gptPrompt = `${gptPromptDate} ${gptPromptRole}`;
   const handleChangeSelect = (event: ChangeEvent<HTMLSelectElement>) => {
     setLang(event.target.value);
     dispatch(promptActions.setLang(event.target.value));
   };
-  console.log(gptPromptRole);
 
-  if (gptConfig.date.start === '' && gptConfig.date.end === '') {
-    gptPromptDate = 'decide for yourself what deadlines are needed';
+  if (gptConfig.date.end === '') {
+    gptPromptDate += 'decide for yourself now many days need to complete task';
   }
   if (
     gptConfig.role.frontend === 0 &&

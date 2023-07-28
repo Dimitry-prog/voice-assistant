@@ -1,20 +1,30 @@
 import React from 'react';
+
 const ellipsisUrl = new URL('../images/ri_more-2-fill.svg', import.meta.url);
 const iconUrl = new URL('../images/card.svg', import.meta.url);
 
-const TodoCard = ({ name = 'name', start = '27.07.2022', end = '29.07.2022', tag = 'Дизайн' }) => {
+type TodoCardProps = {
+  id: string;
+  role: string;
+  start: string;
+  end: string;
+  description: string;
+  cardName: string;
+};
+
+const TodoCard = ({ id, role, start, end, description, cardName }: TodoCardProps) => {
   return (
     <li className="flex justify-between">
       <div className="flex items-center">
         <input type="checkbox" className="mx-2" />
-        <span>{name}</span>
+        <span>{cardName}</span>
       </div>
       <div className="flex items-center">
         <span className="mr-2 bg-violet">
           <span>{start} -</span>
           <span> {end}</span>
         </span>
-        <span className="mr-2 bg-yellow">{tag}</span>
+        <span className="mr-2 bg-yellow">{role}</span>
         <button
           id="voice"
           type="button"
