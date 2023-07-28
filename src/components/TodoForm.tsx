@@ -41,7 +41,7 @@ const TodoForm = () => {
     gptPromptRole = 'реши сам какие специалисты нужны';
   }
 
-  const returnAnswer = ` дополнительные условия к ответ: все ответы давай в виде кода. реализация в период ${gptPromptDate} раздели по ролям(role: '') : ${gptPromptRole}. Ответ верни в виде web. Ответ  верни только  в виде кода в таком формате [{role: 'frontend', start: 'дата начала', end: 'дата конца', description: 'some text', cardName: 'суть задачи', },]`;
+  const returnAnswer = ` .дополнительные условия к ответ: все ответы давай в виде кода. реализация в период ${gptPromptDate} раздели по ролям(role: '') : ${gptPromptRole}. Ответ верни в виде web. Ответ  верни только  в виде кода в таком формате [{role: 'frontend', start: 'дата начала', end: 'дата конца', description: 'some text', cardName: 'суть задачи', },]`;
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
