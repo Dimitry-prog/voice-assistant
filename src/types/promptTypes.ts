@@ -62,3 +62,12 @@ export type GPTConfigRoleType = {
   backend: number;
   designer: number;
 };
+
+export type GPTAnswerType = {
+  id: string;
+  role: string;
+  start: string;
+  end: string;
+  description: string;
+  cardName: string;
+};

@@ -10,7 +10,7 @@ const DataDropdown = () => {
   const [dropdownState, setDropdownState] = useState<{ open: boolean }>({ open: false });
 
   const [dateValues, setDateValues] = useState<GPTConfigDateType>({
-    start: '',
+    start: new Date().toString(),
     end: '',
     days: '',
   });
