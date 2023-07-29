@@ -1,7 +1,7 @@
 import React from 'react';
 
-const ellipsisUrl = new URL('../images/ri_more-2-fill.svg', import.meta.url);
-const iconUrl = new URL('../images/card.svg', import.meta.url);
+// import ellipsisUrl from '../images/ri_more-2-fill.svg';
+import iconUrl from '../images/card.svg';
 
 type TodoCardProps = {
   id: string;
@@ -10,14 +10,34 @@ type TodoCardProps = {
   end: string;
   description: string;
   cardName: string;
+  isChecked: boolean;
+  onCheckboxChange: (id: string, isChecked: boolean) => void;
 };
 
-const TodoCard = ({ id, role, start, end, description, cardName }: TodoCardProps) => {
+const TodoCard = ({
+  id,
+  role,
+  start,
+  end,
+  description,
+  cardName,
+  isChecked,
+  onCheckboxChange,
+}: TodoCardProps) => {
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onCheckboxChange(id, e.target.checked);
+  };
+
   return (
     <li className="flex justify-between">
       <div className="flex items-center">
-        <input type="checkbox" className="mx-2" />
-        <span>{cardName}</span>
+        <input
+          type="checkbox"
+          className="mx-2"
+          checked={isChecked}
+          onChange={handleCheckboxChange}
+        />
+        <span>{description}</span>
       </div>
       <div className="flex items-center">
         <span className="mr-2 bg-violet">
@@ -31,18 +51,18 @@ const TodoCard = ({ id, role, start, end, description, cardName }: TodoCardProps
           aria-label="voice-new-item"
           className="z-10 w-6 h-6 bg-center bg-no-repeat bg-cover cursor-pointer mr-2"
           style={{
-            backgroundImage: 'url(' + iconUrl + ')',
+            backgroundImage: `url(${iconUrl})`,
           }}
         />
-        <button
+        {/* <button
           id="voice"
           type="button"
           aria-label="voice-new-item"
           className="z-10 w-7 h-7 bg-center bg-no-repeat bg-cover cursor-pointer mr-2"
           style={{
-            backgroundImage: 'url(' + ellipsisUrl + ')',
+            backgroundImage: `url(${ellipsisUrl})`,
           }}
-        />
+        /> */}
       </div>
     </li>
   );

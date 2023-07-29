@@ -5,6 +5,7 @@ import arrowDownUrl from '../images/fe_arrow-down.svg';
 
 type TodoCardProps = {
   gptAnswer: CardData[];
+  modifiedTodoCards: CardData[];
 };
 type CardData = {
   role: string;
@@ -14,12 +15,18 @@ type CardData = {
   cardName: string;
 };
 
-const ExportDropdown = ({ gptAnswer }: TodoCardProps) => {
+const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
   const [dropdownState, setDropdownState] = useState<{ open: boolean }>({ open: false });
   const handleDropdownClick = (): void => setDropdownState({ open: !dropdownState.open });
   const handleAllClick = (): void => {
     deleteAllCards();
     gptAnswer.forEach((cardData: CardData) => {
+      createNewCard(cardData);
+    });
+  };
+  const handleOnlySelectedClick = (): void => {
+    deleteAllCards();
+    modifiedTodoCards.forEach((cardData: CardData) => {
       createNewCard(cardData);
     });
   };
@@ -36,7 +43,7 @@ const ExportDropdown = ({ gptAnswer }: TodoCardProps) => {
           <span
             className="w-6 h-6 bg-center bg-no-repeat cursor-pointer"
             style={{
-              backgroundImage: 'url(' + arrowDownUrl + ')',
+              backgroundImage: `url(${arrowDownUrl})`,
             }}
           ></span>
         </button>
@@ -47,7 +54,7 @@ const ExportDropdown = ({ gptAnswer }: TodoCardProps) => {
                 <button onClick={handleAllClick}>All</button>
               </li>
               <li className="w-52 bg-gray p-3 rounded-lg">
-                <button>Only selected</button>
+                <button onClick={handleOnlySelectedClick}>Only selected</button>
               </li>
             </ul>
           </div>
