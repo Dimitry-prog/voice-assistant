@@ -3,6 +3,7 @@ import { RequestOpenAIDataPropsType, RequestOpenAIType, RoleWithCount } from '..
 export const OPENAI_BASE_URL = import.meta.env.VITE_OPENAI_BASE_URL;
 export const OPENAI_CHAT_URL = `${OPENAI_BASE_URL}/chat/completions`;
 export const OPENAI_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+export const TRELLO_KEY = import.meta.env.VITE_TRELLO_API_TOKEN;
 export const REQUEST_OPENAI_DATA = ({
   lang,
   text,

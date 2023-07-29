@@ -25,7 +25,7 @@ const TodoCards = () => {
           </ul>
         )}
       </div>
-      <ExportDropdown />
+      <ExportDropdown gptAnswer={gptAnswer} />
     </>
   );
 };

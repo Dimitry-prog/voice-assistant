@@ -1,10 +1,28 @@
 import React, { useState } from 'react';
+import { createNewCard, deleteAllCards } from '../api/trelloapi';
 
 import arrowDownUrl from '../images/fe_arrow-down.svg';
 
-const ExportDropdown = () => {
+type TodoCardProps = {
+  gptAnswer: CardData[];
+};
+type CardData = {
+  role: string;
+  start: string;
+  end: string;
+  description: string;
+  cardName: string;
+};
+
+const ExportDropdown = ({ gptAnswer }: TodoCardProps) => {
   const [dropdownState, setDropdownState] = useState<{ open: boolean }>({ open: false });
   const handleDropdownClick = (): void => setDropdownState({ open: !dropdownState.open });
+  const handleAllClick = (): void => {
+    deleteAllCards();
+    gptAnswer.forEach((cardData: CardData) => {
+      createNewCard(cardData);
+    });
+  };
 
   return (
     <div className="inline-block w-52 mr-4">
@@ -26,7 +44,7 @@ const ExportDropdown = () => {
           <div className="dropdown">
             <ul>
               <li className="w-52 bg-gray p-3 rounded-lg">
-                <button>All</button>
+                <button onClick={handleAllClick}>All</button>
               </li>
               <li className="w-52 bg-gray p-3 rounded-lg">
                 <button>Only selected</button>
