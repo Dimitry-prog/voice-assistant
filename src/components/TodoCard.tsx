@@ -19,7 +19,6 @@ type TodoCardProps = {
   onCheckboxChange: (id: string, isChecked: boolean) => void;
   prompt: GPTAnswerType;
   prompts: GPTAnswerType[];
-  gptAnswer: GPTAnswerType[];
 };
 
 const TodoCard = ({
@@ -114,7 +113,6 @@ const TodoCard = ({
               onCheckboxChange={onCheckboxChange}
               prompt={child}
               prompts={prompts}
-              gptAnswer={gptAnswer}
             />
           ))}
         </ul>
