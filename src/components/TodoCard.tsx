@@ -10,13 +10,33 @@ type TodoCardProps = {
   end: string;
   description: string;
   cardName: string;
+  isChecked: boolean;
+  onCheckboxChange: (id: string, isChecked: boolean) => void;
 };
 
-const TodoCard = ({ id, role, start, end, description, cardName }: TodoCardProps) => {
+const TodoCard = ({
+  id,
+  role,
+  start,
+  end,
+  description,
+  cardName,
+  isChecked,
+  onCheckboxChange,
+}: TodoCardProps) => {
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onCheckboxChange(id, e.target.checked);
+  };
+
   return (
     <li className="flex justify-between">
       <div className="flex items-center">
-        <input type="checkbox" className="mx-2" />
+        <input
+          type="checkbox"
+          className="mx-2"
+          checked={isChecked}
+          onChange={handleCheckboxChange}
+        />
         <span>{cardName}</span>
       </div>
       <div className="flex items-center">
