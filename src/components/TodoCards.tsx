@@ -26,7 +26,7 @@ const TodoCards = () => {
 
   return (
     <>
-      <div className="mb-2 min-h-[450px] border">
+      <div className="mb-2 mt-10 p-4 min-h-[450px] border border-gray rounded-lg">
         {gptPrompt && (
           <ul>
             {gptAnswer.map((item) => (

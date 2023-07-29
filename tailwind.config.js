@@ -5,10 +5,15 @@ export default {
     extend: {
       colors: {
         green: '#2FEC71',
-        gray: '#D9D9D9',
+        lightgreen: '#AFF4C7',
+        gray: '#A7A7A7',
         lightgray: '#AFADAD',
         violet: '#9747FF',
         yellow: '#FDC925',
+        text: '#2D2B2F',
+      },
+      fontFamily: {
+        body: ['Inter', 'Arial', 'sans-serif'],
       },
     },
   },

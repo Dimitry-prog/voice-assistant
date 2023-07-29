@@ -6,6 +6,7 @@ import { LANGUAGES, REQUEST_OPENAI_DATA } from '../utils/constants';
 import { getGPTPrompt } from '../api/promptApi';
 
 import microUrl from '../images/micro-svg.svg';
+import microActiveUrl from '../images/micro-active.svg';
 
 const TodoForm = () => {
   const dispatch = useAppDispatch();
@@ -63,8 +64,8 @@ const TodoForm = () => {
   };
 
   return (
-    <form className="flex " name="todo-form" onSubmit={handleSubmit}>
-      <div className="flex w-full rounded-lg border border-black border-solid p-4 mr-2">
+    <form className="flex" name="todo-form" onSubmit={handleSubmit}>
+      <div className="flex w-full rounded-lg border border-gray p-4 mr-2">
         <input
           required
           autoComplete="off"
@@ -77,7 +78,7 @@ const TodoForm = () => {
         />
         <select className="w-12 mr-2" onChange={handleChangeSelect}>
           <option value="" disabled={true}>
-            Choose language
+            Выбери язык
           </option>
           <option value="english">En</option>
           <option value="russian">Ru</option>
@@ -87,17 +88,19 @@ const TodoForm = () => {
           id="voice"
           type="button"
           aria-label="voice-new-item"
-          className={
-            !isRecording ? 'z-10 w-6 h-6 cursor-pointer' : 'z-10 w-6 h-6 cursor-pointer bg-red-400'
-          }
+          className="z-10 w-6 h-6 cursor-pointer"
         >
-          <img src={microUrl} alt="Микрофон" />
+          <img
+            className="hover:opacity-70"
+            src={!isRecording ? microUrl : microActiveUrl}
+            alt="Микрофон"
+          />
         </button>
       </div>
       <button
         id="add-item"
         aria-label="add-new-item"
-        className=" w-16 h-auto bg-green rounded-lg flex-shrink-0"
+        className=" w-16 h-auto bg-green rounded-lg flex-shrink-0 hover:opacity-70"
         type="submit"
       >
         Start

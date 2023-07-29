@@ -33,10 +33,10 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
 
   return (
     <div className="inline-block w-52 mr-4">
-      <div className="absolute">
+      <div className="border border-gray rounded-lg absolute">
         <button
           type="button"
-          className=" flex justify-between w-52 text-left bg-gray p-3 rounded-lg mr-4"
+          className=" flex justify-between w-52 text-left bg-green p-3 rounded-lg hover:opacity-70"
           onClick={handleDropdownClick}
         >
           Export to Trello
@@ -44,16 +44,17 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
             className="w-6 h-6 bg-center bg-no-repeat cursor-pointer"
             style={{
               backgroundImage: `url(${arrowDownUrl})`,
+              transform: !dropdownState.open ? 'rotate(0deg)' : 'rotate(180deg)',
             }}
           ></span>
         </button>
         {dropdownState.open && (
-          <div className="dropdown">
+          <div className="">
             <ul>
-              <li className="w-52 bg-gray p-3 rounded-lg">
+              <li className="w-52 p-3 rounded-lg hover:bg-lightgreen cursor-pointer">
                 <button onClick={handleAllClick}>All</button>
               </li>
-              <li className="w-52 bg-gray p-3 rounded-lg">
+              <li className="w-52 p-3 rounded-lg hover:bg-lightgreen cursor-pointer">
                 <button onClick={handleOnlySelectedClick}>Only selected</button>
               </li>
             </ul>
