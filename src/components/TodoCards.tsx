@@ -6,6 +6,7 @@ import { GPTAnswerType } from '../types/promptTypes';
 
 const TodoCards = () => {
   const gptPrompt = useAppSelector((state) => state.prompt.gptPrompt);
+  const status = useAppSelector((state) => state.prompt.status);
   const [gptAnswer, setGptAnswer] = useState<GPTAnswerType[]>([]);
   const [checkboxStates, setCheckboxStates] = useState<{ [id: string]: boolean }>({});
 
@@ -27,7 +28,9 @@ const TodoCards = () => {
   return (
     <>
       <div className="mb-2 mt-10 p-4 min-h-[450px] border border-gray rounded-lg">
-        {gptPrompt && (
+        {status === 'loading' ? (
+          <div className="block text-center">Загрузка...</div>
+        ) : (
           <ul>
             {gptAnswer.map((item) => (
               <TodoCard
