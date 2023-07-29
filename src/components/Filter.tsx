@@ -7,7 +7,7 @@ const Filter = () => {
     <div className="flex mt-2 text-base">
       <RolesDropdown />
       <DataDropdown />
-      <p className="mt-2">*Для более точных ответов заполните фильтры</p>
+      <p className="mt-2 text-gray">*Для более точных ответов заполните фильтры</p>
     </div>
   );
 };

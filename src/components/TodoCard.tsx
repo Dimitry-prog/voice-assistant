@@ -29,27 +29,31 @@ const TodoCard = ({
   };
 
   return (
-    <li className="flex justify-between">
+    <li
+      className={`flex justify-between border rounded-lg p-3 border-gray ${
+        isChecked && 'bg-lightgreen'
+      }`}
+    >
       <div className="flex items-center">
         <input
           type="checkbox"
-          className="mx-2"
+          className="mr-4"
           checked={isChecked}
           onChange={handleCheckboxChange}
         />
         <span>{description}</span>
       </div>
       <div className="flex items-center">
-        <span className="mr-2 bg-violet">
+        <span className="mx-2 bg-violet rounded-lg p-1 whitespace-nowrap min-w-[210px]">
           <span>{start} -</span>
           <span> {end}</span>
         </span>
-        <span className="mr-2 bg-yellow">{role}</span>
+        <span className="mr-2 bg-yellow rounded-lg p-1">{role}</span>
         <button
           id="voice"
           type="button"
           aria-label="voice-new-item"
-          className="z-10 w-6 h-6 bg-center bg-no-repeat bg-cover cursor-pointer mr-2"
+          className="z-10 w-6 h-6 bg-center bg-no-repeat bg-cover cursor-pointer mr-2 hover:opacity-70"
           style={{
             backgroundImage: `url(${iconUrl})`,
           }}
