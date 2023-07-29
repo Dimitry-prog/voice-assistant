@@ -1,4 +1,5 @@
 import { RequestOpenAIDataPropsType, RequestOpenAIType, RoleWithCount } from '../types/promptTypes';
+import { v4 as uuidv4 } from 'uuid';
 
 export const OPENAI_BASE_URL = import.meta.env.VITE_OPENAI_BASE_URL;
 export const OPENAI_CHAT_URL = `${OPENAI_BASE_URL}/chat/completions`;
@@ -12,7 +13,7 @@ export const REQUEST_OPENAI_DATA = ({
   messages: [
     {
       role: 'system',
-      content: `Break this task into several more detailed tasks. Return the answer only in the form of a code in this format [{"id": "", "role": "frontend", "start": "start date", "end": "end date", "description": "describe what need to do here", "cardName": "short name for task", },]. And answer return on this language ${lang}`,
+      content: `Break this task into several more detailed tasks. Return the answer only in the form of a code in this format [{"id": ${uuidv4()}, "parentId": null, "role": "frontend", "start": "start date", "end": "end date", "description": "describe what need to do here", "cardName": "short name for task", },]. And answer return on this language ${lang}`,
     },
     {
       role: 'user',

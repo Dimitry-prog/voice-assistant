@@ -19,7 +19,7 @@ export const getStructureGPTPrompt = createAsyncThunk<
   {
     rejectValue: string;
   }
->('prompt/getGPTPrompt', async (requestData, { rejectWithValue }) => {
+>('prompt/getStructureGPTPrompt', async (requestData, { rejectWithValue }) => {
   const request = apiOpenAI.post('', requestData);
   return handleRequest(request, rejectWithValue);
 });

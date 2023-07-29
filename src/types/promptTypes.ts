@@ -65,6 +65,7 @@ export type GPTConfigRoleType = {
 
 export type GPTAnswerType = {
   id: string;
+  parentId: string | null;
   role: string;
   start: string;
   end: string;

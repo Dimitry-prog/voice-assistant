@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import TodoCard from './TodoCard';
 import ExportDropdown from './ExportDropdown';
 import { useAppSelector } from '../hooks/reduxHooks';
-import { GPTAnswerType } from '../types/promptTypes';
 
 const TodoCards = () => {
   const gptPrompt = useAppSelector((state) => state.prompt.gptPrompt);
   const status = useAppSelector((state) => state.prompt.status);
-  const [gptAnswer, setGptAnswer] = useState<GPTAnswerType[]>([]);
   const [checkboxStates, setCheckboxStates] = useState<{ [id: string]: boolean }>({});
 
-  const modifiedTodoCards = gptAnswer.filter((item) => checkboxStates[item.id]);
+  const modifiedTodoCards = gptPrompt.filter((item) => checkboxStates[item.id]);
+  const noParents = gptPrompt.filter((parent) => parent.parentId === null);
 
   const handleCheckboxChange = (id: string, isChecked: boolean) => {
     setCheckboxStates((prevStates) => ({
@@ -19,21 +18,17 @@ const TodoCards = () => {
     }));
   };
 
-  useEffect(() => {
-    if (gptPrompt) {
-      setGptAnswer(JSON.parse(gptPrompt));
-    }
-  }, [gptPrompt]);
-
   return (
     <>
       <div className="mb-2 mt-10 p-4 min-h-[450px] border border-gray rounded-lg">
         {status === 'loading' ? (
           <div className="block text-center">Загрузка...</div>
         ) : (
-          <ul>
-            {gptAnswer.map((item) => (
+          <ul className="flex flex-col gap-2">
+            {noParents.map((item) => (
               <TodoCard
+                prompt={item}
+                prompts={gptPrompt}
                 key={item.id}
                 {...item}
                 isChecked={!!checkboxStates[item.id]}
@@ -43,7 +38,7 @@ const TodoCards = () => {
           </ul>
         )}
       </div>
-      <ExportDropdown gptAnswer={gptAnswer} modifiedTodoCards={modifiedTodoCards} />
+      <ExportDropdown gptAnswer={gptPrompt} modifiedTodoCards={modifiedTodoCards} />
     </>
   );
 };
