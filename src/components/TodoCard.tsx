@@ -1,7 +1,7 @@
 import React from 'react';
 
-const ellipsisUrl = new URL('../images/ri_more-2-fill.svg', import.meta.url);
-const iconUrl = new URL('../images/card.svg', import.meta.url);
+// import ellipsisUrl from '../images/ri_more-2-fill.svg';
+import iconUrl from '../images/card.svg';
 
 type TodoCardProps = {
   id: string;
@@ -37,7 +37,7 @@ const TodoCard = ({
           checked={isChecked}
           onChange={handleCheckboxChange}
         />
-        <span>{cardName}</span>
+        <span>{description}</span>
       </div>
       <div className="flex items-center">
         <span className="mr-2 bg-violet">
@@ -51,18 +51,18 @@ const TodoCard = ({
           aria-label="voice-new-item"
           className="z-10 w-6 h-6 bg-center bg-no-repeat bg-cover cursor-pointer mr-2"
           style={{
-            backgroundImage: 'url(' + iconUrl + ')',
+            backgroundImage: `url(${iconUrl})`,
           }}
         />
-        <button
+        {/* <button
           id="voice"
           type="button"
           aria-label="voice-new-item"
           className="z-10 w-7 h-7 bg-center bg-no-repeat bg-cover cursor-pointer mr-2"
           style={{
-            backgroundImage: 'url(' + ellipsisUrl + ')',
+            backgroundImage: `url(${ellipsisUrl})`,
           }}
-        />
+        /> */}
       </div>
     </li>
   );

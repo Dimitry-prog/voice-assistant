@@ -43,7 +43,7 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
           <span
             className="w-6 h-6 bg-center bg-no-repeat cursor-pointer"
             style={{
-              backgroundImage: 'url(' + arrowDownUrl + ')',
+              backgroundImage: `url(${arrowDownUrl})`,
             }}
           ></span>
         </button>
