@@ -100,10 +100,10 @@ const TodoForm = () => {
       <button
         id="add-item"
         aria-label="add-new-item"
-        className=" w-16 h-auto bg-green rounded-lg flex-shrink-0 hover:opacity-70"
+        className="w-20 h-auto bg-green rounded-lg flex-shrink-0 hover:opacity-70"
         type="submit"
       >
-        Start
+        Начать
       </button>
     </form>
   );

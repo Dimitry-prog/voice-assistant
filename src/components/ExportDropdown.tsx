@@ -39,7 +39,7 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
           className=" flex justify-between w-52 text-left bg-green p-3 rounded-lg hover:opacity-70"
           onClick={handleDropdownClick}
         >
-          Export to Trello
+          Экспорт в Trello
           <span
             className="w-6 h-6 bg-center bg-no-repeat cursor-pointer"
             style={{
@@ -53,12 +53,12 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
             <ul>
               <li className="w-52 p-3 rounded-lg hover:bg-lightgreen cursor-pointer">
                 <button className="w-full text-left" onClick={handleAllClick}>
-                  All
+                  Все
                 </button>
               </li>
               <li className="w-52 p-3 rounded-lg hover:bg-lightgreen cursor-pointer">
                 <button className="w-full text-left" onClick={handleOnlySelectedClick}>
-                  Only selected
+                  Только отмеченные
                 </button>
               </li>
             </ul>
