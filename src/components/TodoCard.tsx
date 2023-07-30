@@ -17,6 +17,7 @@ type TodoCardProps = {
   cardName: string;
   isChecked: boolean;
   onCheckboxChange: (id: string, isChecked: boolean) => void;
+  checkboxStates: { [id: string]: boolean };
   prompt: GPTAnswerType;
   prompts: GPTAnswerType[];
 };
@@ -32,6 +33,7 @@ const TodoCard = ({
   onCheckboxChange,
   prompt,
   prompts,
+  checkboxStates, // Include checkboxStates in the props
 }: TodoCardProps) => {
   const [parents, setParents] = useState<GPTAnswerType[]>(prompts);
   const hasChildren: GPTAnswerType[] = parents.filter((child) => child.parentId === id);
@@ -40,6 +42,8 @@ const TodoCard = ({
   const gptAnswerStatus = useAppSelector((state) => state.prompt.gptAnswerStatus);
   const gptAnswer = useAppSelector((state) => state.prompt.gptAnswer);
   const handleDecompose = async (id: string, description: string, start: string, role: string) => {
+    console.log(id, description, start, role);
+
     await dispatch(
       getStructureGPTPrompt(
         REQUEST_OPENAI_DATA({
@@ -51,23 +55,29 @@ const TodoCard = ({
         })
       )
     );
-    const parents: GPTAnswerType[] = gptAnswer.map((prompt) => ({
-      ...prompt,
-      parentId: id,
-    }));
-    setParents((prev) => [...prev, ...parents]);
-  };
 
+    setParents((prevParents) => {
+      const newParents: GPTAnswerType[] = gptAnswer.map((prompt) => ({
+        ...prompt,
+        parentId: id,
+      }));
+      return [...prevParents, ...newParents];
+    });
+  };
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onCheckboxChange(id, e.target.checked);
   };
+  // console.log(parents);
+
+  // console.log(hasChildren);
+  const actualIsChecked = checkboxStates.hasOwnProperty(id) ? checkboxStates[id] : isChecked;
 
   useEffect(() => {}, [gptAnswer, parents]);
 
   return (
     <li
       className={`flex flex-col justify-between gap-2 border rounded-lg p-3 border-gray ${
-        isChecked && 'bg-lightgreen'
+        actualIsChecked ? 'bg-lightgreen' : 'bg-white'
       }`}
     >
       <div className="flex justify-between">
@@ -75,7 +85,7 @@ const TodoCard = ({
           <input
             type="checkbox"
             className="mr-4"
-            checked={isChecked}
+            checked={actualIsChecked}
             onChange={handleCheckboxChange}
           />
           <span>{description}</span>
@@ -103,16 +113,18 @@ const TodoCard = ({
         <ul className="ml-8 flex flex-col gap-2">
           {hasChildren.map((child) => (
             <TodoCard
+              key={child.id}
               id={child.id}
               role={child.role}
               start={child.start}
               end={child.end}
               description={child.description}
               cardName={child.cardName}
-              isChecked={isChecked}
+              isChecked={actualIsChecked}
               onCheckboxChange={onCheckboxChange}
               prompt={child}
               prompts={prompts}
+              checkboxStates={checkboxStates}
             />
           ))}
         </ul>
