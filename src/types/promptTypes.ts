@@ -72,3 +72,11 @@ export type GPTAnswerType = {
   description: string;
   cardName: string;
 };
+
+export type CardData = {
+  role: string;
+  start: string;
+  end: string;
+  description: string;
+  cardName: string;
+};

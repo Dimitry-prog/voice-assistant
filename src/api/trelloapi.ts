@@ -1,24 +1,7 @@
-import { TRELLO_KEY } from '../utils/constants';
-
-type CardData = {
-  role: string;
-  start: string;
-  end: string;
-  description: string;
-  cardName: string;
-};
+import { TRELLO_KEY, LABEL_ID } from '../utils/constants';
+import { CardData } from '../types/promptTypes';
 type TrelloCard = {
   id: string;
-};
-const labelId = {
-  frontend: '64c3ea2d53ef33a7bd91e5bf',
-  backend: '64c3ea2d53ef33a7bd91e5c8',
-  designer: '64c3ea2d53ef33a7bd91e5c2',
-  fullstack: '64c3ea2d53ef33a7bd91e5cb',
-  projectmanager: '64c3ea2d53ef33a7bd91e5d2',
-  analyst: '64c3ea2d53ef33a7bd91e5cc',
-  datascientist: '64c69f6692144f4c019648cf',
-  QAengineer: '64c69f6d375c78887872ae36',
 };
 
 const listId = '64c3ea44d179b00effc7ab34';
@@ -28,7 +11,7 @@ export const createNewCard = async (cardData: CardData): Promise<void> => {
 
   const { description: name = 'description', start, end: due, role } = cardData;
 
-  const idLabels = labelId[role as keyof typeof labelId];
+  const idLabels = LABEL_ID[role as keyof typeof LABEL_ID];
 
   const card = {
     name,
