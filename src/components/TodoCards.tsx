@@ -3,6 +3,23 @@ import TodoCard from './TodoCard';
 import ExportDropdown from './ExportDropdown';
 import { useAppSelector } from '../hooks/reduxHooks';
 import Preloader from './Preloader/Preloader';
+import { GPTAnswerType } from '../types/promptTypes';
+
+type TodoCardProps = {
+  id: string;
+  role: string;
+  start: string;
+  end: string;
+  description: string;
+  cardName: string;
+  isChecked: boolean;
+  onCheckboxChange: (id: string, isChecked: boolean) => void;
+  checkboxStates: { [id: string]: boolean };
+  prompt: GPTAnswerType;
+  prompts: GPTAnswerType[];
+  selectedCards: TodoCardProps[];
+  setSelectedCards: React.Dispatch<React.SetStateAction<string[]>>;
+};
 
 const TodoCards = () => {
   const gptPrompt = useAppSelector((state) => state.prompt.gptPrompt);
@@ -12,14 +29,14 @@ const TodoCards = () => {
   const modifiedTodoCards = gptPrompt.filter((item) => checkboxStates[item.id]);
   const noParents = gptPrompt.filter((parent) => parent.parentId === null);
 
+  const [selectedCards, setSelectedCards] = useState<TodoCardProps[]>([]);
   const handleCheckboxChange = (id: string, isChecked: boolean) => {
-    setCheckboxStates((prevStates) => ({
-      ...prevStates,
+    setCheckboxStates((prevState) => ({
+      ...prevState,
       [id]: isChecked,
     }));
   };
-
-  console.log(gptPrompt);
+  console.log(selectedCards);
 
   return (
     <>
@@ -37,6 +54,8 @@ const TodoCards = () => {
                 isChecked={!!checkboxStates[item.id]}
                 onCheckboxChange={handleCheckboxChange}
                 checkboxStates={checkboxStates}
+                selectedCards={selectedCards}
+                setSelectedCards={setSelectedCards}
               />
             ))}
           </ul>
