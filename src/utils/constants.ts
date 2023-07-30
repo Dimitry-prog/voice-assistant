@@ -1,4 +1,4 @@
-import { RequestOpenAIDataPropsType, RequestOpenAIType, RoleWithCount } from '../types/promptTypes';
+import { RequestOpenAIDataPropsType, RequestOpenAIType } from '../types/promptTypes';
 import { v4 as uuidv4 } from 'uuid';
 
 export const OPENAI_BASE_URL = import.meta.env.VITE_OPENAI_BASE_URL;
