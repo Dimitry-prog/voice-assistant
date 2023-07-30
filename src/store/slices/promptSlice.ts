@@ -36,6 +36,11 @@ const initialState: PromptStateType = {
       frontend: 0,
       backend: 0,
       designer: 0,
+      fullstack: 0,
+      projectmanager: 0,
+      analyst: 0,
+      datascientist: 0,
+      QAengineer: 0,
     },
   },
 };
