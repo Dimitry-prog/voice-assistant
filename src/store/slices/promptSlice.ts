@@ -19,7 +19,7 @@ type PromptStateType = {
 };
 
 const initialState: PromptStateType = {
-  lang: 'russian',
+  lang: 'english',
   userPrompt: '',
   gptPrompt: [],
   gptAnswer: [],

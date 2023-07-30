@@ -16,7 +16,7 @@ const TodoForm = () => {
     lang: LANGUAGES[lang as keyof typeof LANGUAGES],
   });
   const gptConfig = useAppSelector((state) => state.prompt.gptConfig);
-
+  console.log('gptConfig', gptConfig);
   let gptPromptDate = Object.entries(gptConfig.date)
     .map(([key, value]) => `${key}: ${value}`)
     .join(', ');
@@ -40,7 +40,7 @@ const TodoForm = () => {
     gptPromptRole = 'decide for yourself which specialists are needed';
   }
 
-  const returnAnswer = ` .additional conditions to the task: set the time ${gptPromptDate} interval needed to solve the task, split roles(role: '') : ${gptPromptRole}.`;
+  const returnAnswer = ` .additional conditions to the task: For each task, specify the predicted time. set the time ${gptPromptDate} interval needed to solve the task, split roles(role: '') : ${gptPromptRole}.`;
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;

@@ -73,7 +73,7 @@ const TodoCard = ({
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newIsChecked = e.target.checked;
-    onCheckboxChange(id, newIsChecked); // Update the checkbox state for the current card
+    onCheckboxChange(id, newIsChecked);
 
     setSelectedCards((prevSelectedCards) => {
       if (newIsChecked) {
@@ -96,7 +96,6 @@ const TodoCard = ({
           },
         ];
       } else {
-        // Remove the current card from the selectedCards array
         return prevSelectedCards.filter((card) => card.id !== id);
       }
     });

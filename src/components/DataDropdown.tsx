@@ -8,10 +8,11 @@ import { promptActions } from '../store/slices/promptSlice';
 const DataDropdown = () => {
   const dispatch = useAppDispatch();
   const [dropdownState, setDropdownState] = useState<{ open: boolean }>({ open: false });
-
+  const currentDate = new Date();
+  currentDate.setDate(currentDate.getDate() + 30);
   const [dateValues, setDateValues] = useState<GPTConfigDateType>({
     start: new Date().toString(),
-    end: '',
+    end: currentDate.toString(),
     days: '',
   });
 
