@@ -21,19 +21,12 @@ const listId = '64c3ea44d179b00effc7ab34';
 export const createNewCard = async (cardData: CardData): Promise<void> => {
   console.log('отправка запроса');
 
-  const {
-    cardName: name = 'cardName',
-    description: desc = 'description',
-    start,
-    end: due,
-    role,
-  } = cardData;
+  const { description: name = 'description', start, end: due, role } = cardData;
 
   const idLabels = labelId[role as keyof typeof labelId];
 
   const card = {
     name,
-    desc,
     due,
     start,
     idLabels,
