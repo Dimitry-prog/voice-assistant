@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import TodoCard from './TodoCard';
 import ExportDropdown from './ExportDropdown';
 import { useAppSelector } from '../hooks/reduxHooks';
+import Preloader from './Preloader/Preloader';
 
 const TodoCards = () => {
   const gptPrompt = useAppSelector((state) => state.prompt.gptPrompt);
@@ -18,11 +19,13 @@ const TodoCards = () => {
     }));
   };
 
+  console.log(gptPrompt);
+
   return (
     <>
       <div className="mb-2 mt-10 p-4 min-h-[450px] border border-gray rounded-lg">
         {status === 'loading' ? (
-          <div className="block text-center">Загрузка...</div>
+          <Preloader />
         ) : (
           <ul className="flex flex-col gap-2">
             {noParents.map((item) => (
@@ -33,6 +36,7 @@ const TodoCards = () => {
                 {...item}
                 isChecked={!!checkboxStates[item.id]}
                 onCheckboxChange={handleCheckboxChange}
+                checkboxStates={checkboxStates}
               />
             ))}
           </ul>
