@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
 import { createNewCard, deleteAllCards } from '../api/trelloapi';
+import { CardData } from '../types/promptTypes';
 
 import arrowDownUrl from '../images/fe_arrow-down.svg';
 
 type TodoCardProps = {
   gptAnswer: CardData[];
   modifiedTodoCards: CardData[];
-};
-type CardData = {
-  role: string;
-  start: string;
-  end: string;
-  description: string;
-  cardName: string;
 };
 
 const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {

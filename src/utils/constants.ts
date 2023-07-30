@@ -37,3 +37,14 @@ export const roles = [
   { roleRu: 'Датасаентист', roleEn: 'datascientist', count: 0 },
   { roleRu: 'QA-тестировщик', roleEn: 'QAengineer', count: 0 },
 ];
+
+export const LABEL_ID = {
+  frontend: '64c3ea2d53ef33a7bd91e5bf',
+  backend: '64c3ea2d53ef33a7bd91e5c8',
+  designer: '64c3ea2d53ef33a7bd91e5c2',
+  fullstack: '64c3ea2d53ef33a7bd91e5cb',
+  projectmanager: '64c3ea2d53ef33a7bd91e5d2',
+  analyst: '64c3ea2d53ef33a7bd91e5cc',
+  datascientist: '64c69f6692144f4c019648cf',
+  QAengineer: '64c69f6d375c78887872ae36',
+};
