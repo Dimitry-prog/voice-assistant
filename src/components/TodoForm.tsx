@@ -30,7 +30,7 @@ const TodoForm = () => {
   };
 
   if (gptConfig.date.end === '') {
-    gptPromptDate += 'decide for yourself now many days need to complete task';
+    gptPromptDate += 'decide for yourself';
   }
   if (
     gptConfig.role.frontend === 0 &&
@@ -40,7 +40,7 @@ const TodoForm = () => {
     gptPromptRole = 'decide for yourself which specialists are needed';
   }
 
-  const returnAnswer = ` .additional conditions to the task: implementation in the period ${gptPromptDate} split roles(role: '') : ${gptPromptRole}.`;
+  const returnAnswer = ` .additional conditions to the task: set the time ${gptPromptDate} interval needed to solve the task, split roles(role: '') : ${gptPromptRole}.`;
 
   const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;

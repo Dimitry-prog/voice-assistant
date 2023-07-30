@@ -1,21 +1,30 @@
 import { ActionReducerMapBuilder, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getGPTPrompt } from '../../api/promptApi';
-import { GPTConfigDateType, GPTConfigRoleType, GPTConfigType } from '../../types/promptTypes';
+import { getGPTPrompt, getStructureGPTPrompt } from '../../api/promptApi';
+import {
+  GPTAnswerType,
+  GPTConfigDateType,
+  GPTConfigRoleType,
+  GPTConfigType,
+} from '../../types/promptTypes';
 
 type PromptStateType = {
   lang: string;
   userPrompt: string;
-  gptPrompt: string;
+  gptPrompt: GPTAnswerType[];
   status: 'init' | 'loading' | 'success' | 'error';
   error: string | undefined;
   gptConfig: GPTConfigType;
+  gptAnswer: GPTAnswerType[];
+  gptAnswerStatus: 'init' | 'loading' | 'success' | 'error';
 };
 
 const initialState: PromptStateType = {
   lang: 'russian',
   userPrompt: '',
-  gptPrompt: '',
+  gptPrompt: [],
+  gptAnswer: [],
   status: 'init',
+  gptAnswerStatus: 'init',
   error: undefined,
   gptConfig: {
     date: {
@@ -53,13 +62,26 @@ const promptSlice = createSlice({
       .addCase(getGPTPrompt.pending, (state) => {
         state.status = 'loading';
         state.error = undefined;
+        state.gptAnswer = [];
       })
       .addCase(getGPTPrompt.fulfilled, (state, action) => {
         state.status = 'success';
-        state.gptPrompt = action.payload.choices[0].message.content;
+        state.gptPrompt = JSON.parse(action.payload.choices[0].message.content);
       })
       .addCase(getGPTPrompt.rejected, (state, action) => {
         state.status = 'error';
+        state.error = action.payload;
+      })
+      .addCase(getStructureGPTPrompt.pending, (state) => {
+        state.gptAnswerStatus = 'loading';
+        state.error = undefined;
+      })
+      .addCase(getStructureGPTPrompt.fulfilled, (state, action) => {
+        state.gptAnswerStatus = 'success';
+        state.gptAnswer = JSON.parse(action.payload.choices[0].message.content);
+      })
+      .addCase(getStructureGPTPrompt.rejected, (state, action) => {
+        state.gptAnswerStatus = 'error';
         state.error = action.payload;
       });
   },
