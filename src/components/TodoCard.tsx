@@ -21,9 +21,8 @@ type TodoCardProps = {
   prompt: GPTAnswerType;
   prompts: GPTAnswerType[];
   selectedCards: TodoCardProps[];
-  setSelectedCards: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedCards: React.Dispatch<React.SetStateAction<TodoCardProps[]>>;
 };
-
 const TodoCard = ({
   id,
   role,
@@ -31,7 +30,6 @@ const TodoCard = ({
   end,
   description,
   cardName,
-  // isChecked,
   onCheckboxChange,
   prompt,
   prompts,
@@ -45,8 +43,6 @@ const TodoCard = ({
   const lang = useAppSelector((state) => state.prompt.lang);
   const gptAnswerStatus = useAppSelector((state) => state.prompt.gptAnswerStatus);
   const gptAnswer = useAppSelector((state) => state.prompt.gptAnswer);
-
-  const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const handleDecompose = async (id: string, description: string, start: string, role: string) => {
     console.log(id, description, start, role);
@@ -71,41 +67,45 @@ const TodoCard = ({
       return [...prevParents, ...newParents];
     });
   };
-  // const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   onCheckboxChange(id, e.target.checked);
-  // };
-  // console.log(parents);
-
-  // console.log(hasChildren);
   const actualIsChecked = checkboxStates.hasOwnProperty(id) ? checkboxStates[id] : false;
 
   useEffect(() => {}, [gptAnswer, parents]);
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onCheckboxChange(id, e.target.checked);
+    const newIsChecked = e.target.checked;
+    onCheckboxChange(id, newIsChecked); // Update the checkbox state for the current card
+
+    setSelectedCards((prevSelectedCards) => {
+      if (newIsChecked) {
+        return [
+          ...prevSelectedCards,
+          {
+            id,
+            role,
+            start,
+            end,
+            description,
+            cardName,
+            isChecked: newIsChecked,
+            onCheckboxChange,
+            prompt,
+            prompts,
+            checkboxStates,
+            selectedCards,
+            setSelectedCards,
+          },
+        ];
+      } else {
+        // Remove the current card from the selectedCards array
+        return prevSelectedCards.filter((card) => card.id !== id);
+      }
+    });
   };
   useEffect(() => {
-    // If the checkbox state has changed, update the parent's checkbox state accordingly
     if (actualIsChecked !== checkboxStates[id]) {
       onCheckboxChange(id, actualIsChecked);
     }
   }, [actualIsChecked, checkboxStates, id, onCheckboxChange]);
-
-  useEffect(() => {
-    // If the parent's checkbox state has changed, update the local state accordingly
-    if (actualIsChecked !== checkboxStates[id]) {
-      setIsChecked(checkboxStates[id]);
-    }
-  }, [actualIsChecked, checkboxStates, id]);
-
-  useEffect(() => {
-    // Update selectedCards when the checkbox is checked/unchecked
-    if (actualIsChecked) {
-      setSelectedCards((prevSelected) => [...prevSelected, id]);
-    } else {
-      setSelectedCards((prevSelected) => prevSelected.filter((item) => item !== id));
-    }
-  }, [actualIsChecked, setSelectedCards, id]);
 
   return (
     <li

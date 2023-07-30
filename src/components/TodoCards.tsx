@@ -18,7 +18,7 @@ type TodoCardProps = {
   prompt: GPTAnswerType;
   prompts: GPTAnswerType[];
   selectedCards: TodoCardProps[];
-  setSelectedCards: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedCards: React.Dispatch<React.SetStateAction<TodoCardProps[]>>;
 };
 
 const TodoCards = () => {
@@ -26,7 +26,6 @@ const TodoCards = () => {
   const status = useAppSelector((state) => state.prompt.status);
   const [checkboxStates, setCheckboxStates] = useState<{ [id: string]: boolean }>({});
 
-  const modifiedTodoCards = gptPrompt.filter((item) => checkboxStates[item.id]);
   const noParents = gptPrompt.filter((parent) => parent.parentId === null);
 
   const [selectedCards, setSelectedCards] = useState<TodoCardProps[]>([]);
@@ -36,7 +35,6 @@ const TodoCards = () => {
       [id]: isChecked,
     }));
   };
-  console.log(selectedCards);
 
   return (
     <>
@@ -61,7 +59,7 @@ const TodoCards = () => {
           </ul>
         )}
       </div>
-      <ExportDropdown gptAnswer={gptPrompt} modifiedTodoCards={modifiedTodoCards} />
+      <ExportDropdown gptAnswer={gptPrompt} modifiedTodoCards={selectedCards} />
     </>
   );
 };
