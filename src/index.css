@@ -5,10 +5,10 @@
 @tailwind utilities;
 
 * {
-    font-family: 'Inter', 'Arial', 'sans-serif';
-    color: #2d2b2f;
+  font-family: 'Inter', 'Arial', 'sans-serif';
+  color: #2d2b2f;
 }
 
-#root {
+/* #root {
     @apply bg-black/50
-}
+} */

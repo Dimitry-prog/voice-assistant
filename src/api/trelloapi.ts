@@ -48,8 +48,6 @@ export const createNewCard = async (cardData: CardData): Promise<void> => {
     });
 
     console.log(`Response: ${response.status} ${response.statusText}`);
-    const text = await response.text();
-    console.log('create card', text);
   } catch (error) {
     console.error('Error creating card:', error);
   }

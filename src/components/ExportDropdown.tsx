@@ -52,10 +52,14 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
           <div className="">
             <ul>
               <li className="w-52 p-3 rounded-lg hover:bg-lightgreen cursor-pointer">
-                <button onClick={handleAllClick}>All</button>
+                <button className="w-full text-left" onClick={handleAllClick}>
+                  All
+                </button>
               </li>
               <li className="w-52 p-3 rounded-lg hover:bg-lightgreen cursor-pointer">
-                <button onClick={handleOnlySelectedClick}>Only selected</button>
+                <button className="w-full text-left" onClick={handleOnlySelectedClick}>
+                  Only selected
+                </button>
               </li>
             </ul>
           </div>
