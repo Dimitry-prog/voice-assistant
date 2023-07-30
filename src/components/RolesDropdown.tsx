@@ -16,6 +16,11 @@ const Dropdown = () => {
     frontend: 0,
     backend: 0,
     designer: 0,
+    fullstack: 0,
+    projectmanager: 0,
+    analyst: 0,
+    datascientist: 0,
+    QAengineer: 0,
   });
 
   const handleChangeMax = (role: string) => {
@@ -33,11 +38,11 @@ const Dropdown = () => {
   const handleDropdownClick = (): void => setDropdownState({ open: !dropdownState.open });
 
   return (
-    <div className="inline-block w-52 mr-4">
+    <div className="inline-block w-72 mr-4">
       <div className="border border-gray rounded-lg absolute bg-white">
         <button
           type="button"
-          className=" flex justify-between w-52 text-lef p-3 rounded-lg hover:opacity-70"
+          className=" flex justify-between w-72 text-lef p-3 rounded-lg hover:opacity-70"
           onClick={handleDropdownClick}
         >
           Роли
@@ -53,7 +58,7 @@ const Dropdown = () => {
           <div className="dropdown">
             <ul>
               {roles.map((role, i) => (
-                <li className="flex justify-between w-52  p-3 rounded-lg" key={i}>
+                <li className="flex justify-between w-72  p-3 rounded-lg" key={i}>
                   <span>{role.roleRu}</span>
                   <div className="flex align-middle">
                     <button

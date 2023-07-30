@@ -69,7 +69,7 @@ const TodoCard = ({
   };
   const actualIsChecked = checkboxStates.hasOwnProperty(id) ? checkboxStates[id] : false;
 
-  useEffect(() => {}, [gptAnswer, parents]);
+  useEffect(() => {}, [gptAnswer, parents, hasChildren]);
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newIsChecked = e.target.checked;

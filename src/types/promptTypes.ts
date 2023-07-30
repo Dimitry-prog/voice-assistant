@@ -41,11 +41,6 @@ export type Usage = {
   total_tokens: number;
 };
 
-export type RoleWithCount = {
-  role: string;
-  count: number;
-};
-
 export type GPTConfigType = {
   date: GPTConfigDateType;
   role: GPTConfigRoleType;
@@ -61,6 +56,11 @@ export type GPTConfigRoleType = {
   frontend: number;
   backend: number;
   designer: number;
+  fullstack: number;
+  projectmanager: number;
+  analyst: number;
+  datascientist: number;
+  QAengineer: number;
 };
 
 export type GPTAnswerType = {

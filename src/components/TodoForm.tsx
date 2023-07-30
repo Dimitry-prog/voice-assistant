@@ -72,7 +72,7 @@ const TodoForm = () => {
           id="todo-item"
           type="text"
           className="outline-none w-full h-full z-0 pr-8"
-          placeholder="new project"
+          placeholder="Можете сказать голосом или написать Ваше запрос. Что Вы хотите сделать ?"
           value={text}
           onChange={handleChangeInput}
         />

@@ -14,6 +14,11 @@ const labelId = {
   frontend: '64c3ea2d53ef33a7bd91e5bf',
   backend: '64c3ea2d53ef33a7bd91e5c8',
   designer: '64c3ea2d53ef33a7bd91e5c2',
+  fullstack: '64c3ea2d53ef33a7bd91e5cb',
+  projectmanager: '64c3ea2d53ef33a7bd91e5d2',
+  analyst: '64c3ea2d53ef33a7bd91e5cc',
+  datascientist: '64c69f6692144f4c019648cf',
+  QAengineer: '64c69f6d375c78887872ae36',
 };
 
 const listId = '64c3ea44d179b00effc7ab34';
