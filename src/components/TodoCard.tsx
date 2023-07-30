@@ -20,8 +20,9 @@ type TodoCardProps = {
   checkboxStates: { [id: string]: boolean };
   prompt: GPTAnswerType;
   prompts: GPTAnswerType[];
+  selectedCards: TodoCardProps[];
+  setSelectedCards: React.Dispatch<React.SetStateAction<TodoCardProps[]>>;
 };
-
 const TodoCard = ({
   id,
   role,
@@ -29,11 +30,12 @@ const TodoCard = ({
   end,
   description,
   cardName,
-  isChecked,
   onCheckboxChange,
   prompt,
   prompts,
   checkboxStates, // Include checkboxStates in the props
+  selectedCards,
+  setSelectedCards,
 }: TodoCardProps) => {
   const [parents, setParents] = useState<GPTAnswerType[]>(prompts);
   const hasChildren: GPTAnswerType[] = parents.filter((child) => child.parentId === id);
@@ -41,6 +43,7 @@ const TodoCard = ({
   const lang = useAppSelector((state) => state.prompt.lang);
   const gptAnswerStatus = useAppSelector((state) => state.prompt.gptAnswerStatus);
   const gptAnswer = useAppSelector((state) => state.prompt.gptAnswer);
+
   const handleDecompose = async (id: string, description: string, start: string, role: string) => {
     console.log(id, description, start, role);
 
@@ -64,15 +67,45 @@ const TodoCard = ({
       return [...prevParents, ...newParents];
     });
   };
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onCheckboxChange(id, e.target.checked);
-  };
-  // console.log(parents);
-
-  // console.log(hasChildren);
-  const actualIsChecked = checkboxStates.hasOwnProperty(id) ? checkboxStates[id] : isChecked;
+  const actualIsChecked = checkboxStates.hasOwnProperty(id) ? checkboxStates[id] : false;
 
   useEffect(() => {}, [gptAnswer, parents]);
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newIsChecked = e.target.checked;
+    onCheckboxChange(id, newIsChecked); // Update the checkbox state for the current card
+
+    setSelectedCards((prevSelectedCards) => {
+      if (newIsChecked) {
+        return [
+          ...prevSelectedCards,
+          {
+            id,
+            role,
+            start,
+            end,
+            description,
+            cardName,
+            isChecked: newIsChecked,
+            onCheckboxChange,
+            prompt,
+            prompts,
+            checkboxStates,
+            selectedCards,
+            setSelectedCards,
+          },
+        ];
+      } else {
+        // Remove the current card from the selectedCards array
+        return prevSelectedCards.filter((card) => card.id !== id);
+      }
+    });
+  };
+  useEffect(() => {
+    if (actualIsChecked !== checkboxStates[id]) {
+      onCheckboxChange(id, actualIsChecked);
+    }
+  }, [actualIsChecked, checkboxStates, id, onCheckboxChange]);
 
   return (
     <li
@@ -125,6 +158,8 @@ const TodoCard = ({
               prompt={child}
               prompts={prompts}
               checkboxStates={checkboxStates}
+              selectedCards={selectedCards}
+              setSelectedCards={setSelectedCards}
             />
           ))}
         </ul>
