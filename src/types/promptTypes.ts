@@ -61,6 +61,11 @@ export type GPTConfigRoleType = {
   frontend: number;
   backend: number;
   designer: number;
+  fullstack: number;
+  projectmanager: number;
+  analyst: number;
+  datascientist: number;
+  QAengineer: number;
 };
 
 export type GPTAnswerType = {
