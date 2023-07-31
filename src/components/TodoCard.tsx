@@ -53,11 +53,6 @@ const TodoCard = ({
   );
 
   const handleDecompose = async (id: string, description: string, start: string, role: string) => {
-    console.log('handleDecompose - id:', id);
-    console.log('handleDecompose - description:', description);
-    console.log('handleDecompose - start:', start);
-    console.log('handleDecompose - role:', role);
-
     const gptAnswer = await dispatch(
       getStructureGPTPrompt(
         REQUEST_OPENAI_DATA({
@@ -72,7 +67,6 @@ const TodoCard = ({
 
     if (typeof gptAnswer.payload === 'object' && 'choices' in gptAnswer.payload) {
       const responsePayload = JSON.parse(gptAnswer.payload.choices[0].message.content);
-      console.log(responsePayload);
       if (Array.isArray(responsePayload)) {
         setParents((prevParents) => {
           const newParents: GPTAnswerType[] = responsePayload.map((prompt) => ({
@@ -89,14 +83,36 @@ const TodoCard = ({
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newIsChecked = e.target.checked;
     onCheckboxChange(id, newIsChecked);
-    setActualIsChecked(newIsChecked); // Update the local state for the current card
+    setActualIsChecked(newIsChecked);
+
+    if (newIsChecked) {
+      setSelectedCards((prevSelectedCards) => [
+        ...prevSelectedCards,
+        {
+          id,
+          role,
+          start,
+          end,
+          description,
+          cardName,
+          isChecked: newIsChecked,
+          onCheckboxChange,
+          checkboxStates,
+          prompt,
+          prompts,
+          selectedCards,
+          setSelectedCards,
+        },
+      ]);
+    } else {
+      setSelectedCards((prevSelectedCards) => prevSelectedCards.filter((card) => card.id !== id));
+    }
   };
   useEffect(() => {
     if (actualIsChecked !== checkboxStates[id]) {
       onCheckboxChange(id, actualIsChecked);
     }
   }, [actualIsChecked, checkboxStates, id, onCheckboxChange]);
-  console.log('parents:', parents);
   return (
     <li
       className={`flex flex-col justify-between gap-2 border rounded-lg p-3 border-gray ${

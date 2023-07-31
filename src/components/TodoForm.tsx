@@ -16,7 +16,6 @@ const TodoForm = () => {
     lang: LANGUAGES[lang as keyof typeof LANGUAGES],
   });
   const gptConfig = useAppSelector((state) => state.prompt.gptConfig);
-  console.log('gptConfig', gptConfig);
   let gptPromptDate = Object.entries(gptConfig.date)
     .map(([key, value]) => `${key}: ${value}`)
     .join(', ');
