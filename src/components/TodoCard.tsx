@@ -53,11 +53,6 @@ const TodoCard = ({
   );
 
   const handleDecompose = async (id: string, description: string, start: string, role: string) => {
-    console.log('handleDecompose - id:', id);
-    console.log('handleDecompose - description:', description);
-    console.log('handleDecompose - start:', start);
-    console.log('handleDecompose - role:', role);
-
     const gptAnswer = await dispatch(
       getStructureGPTPrompt(
         REQUEST_OPENAI_DATA({
@@ -72,7 +67,6 @@ const TodoCard = ({
 
     if (typeof gptAnswer.payload === 'object' && 'choices' in gptAnswer.payload) {
       const responsePayload = JSON.parse(gptAnswer.payload.choices[0].message.content);
-      console.log(responsePayload);
       if (Array.isArray(responsePayload)) {
         setParents((prevParents) => {
           const newParents: GPTAnswerType[] = responsePayload.map((prompt) => ({
@@ -96,7 +90,6 @@ const TodoCard = ({
       onCheckboxChange(id, actualIsChecked);
     }
   }, [actualIsChecked, checkboxStates, id, onCheckboxChange]);
-  console.log('parents:', parents);
   return (
     <li
       className={`flex flex-col justify-between gap-2 border rounded-lg p-3 border-gray ${
