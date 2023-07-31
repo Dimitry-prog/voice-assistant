@@ -83,7 +83,30 @@ const TodoCard = ({
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newIsChecked = e.target.checked;
     onCheckboxChange(id, newIsChecked);
-    setActualIsChecked(newIsChecked); // Update the local state for the current card
+    setActualIsChecked(newIsChecked);
+
+    if (newIsChecked) {
+      setSelectedCards((prevSelectedCards) => [
+        ...prevSelectedCards,
+        {
+          id,
+          role,
+          start,
+          end,
+          description,
+          cardName,
+          isChecked: newIsChecked,
+          onCheckboxChange,
+          checkboxStates,
+          prompt,
+          prompts,
+          selectedCards,
+          setSelectedCards,
+        },
+      ]);
+    } else {
+      setSelectedCards((prevSelectedCards) => prevSelectedCards.filter((card) => card.id !== id));
+    }
   };
   useEffect(() => {
     if (actualIsChecked !== checkboxStates[id]) {
