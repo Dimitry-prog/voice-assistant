@@ -23,6 +23,7 @@ type TodoCardProps = {
   selectedCards: TodoCardProps[];
   setSelectedCards: React.Dispatch<React.SetStateAction<TodoCardProps[]>>;
 };
+
 const TodoCard = ({
   id,
   role,
@@ -30,6 +31,7 @@ const TodoCard = ({
   end,
   description,
   cardName,
+  isChecked,
   onCheckboxChange,
   prompt,
   prompts,
@@ -44,10 +46,19 @@ const TodoCard = ({
   const gptAnswerStatus = useAppSelector((state) => state.prompt.gptAnswerStatus);
   const gptAnswer = useAppSelector((state) => state.prompt.gptAnswer);
 
-  const handleDecompose = async (id: string, description: string, start: string, role: string) => {
-    console.log(id, description, start, role);
+  useEffect(() => {}, [gptAnswer, parents, hasChildren]);
 
-    await dispatch(
+  const [actualIsChecked, setActualIsChecked] = useState(
+    checkboxStates.hasOwnProperty(id) ? checkboxStates[id] : false
+  );
+
+  const handleDecompose = async (id: string, description: string, start: string, role: string) => {
+    console.log('handleDecompose - id:', id);
+    console.log('handleDecompose - description:', description);
+    console.log('handleDecompose - start:', start);
+    console.log('handleDecompose - role:', role);
+
+    const gptAnswer = await dispatch(
       getStructureGPTPrompt(
         REQUEST_OPENAI_DATA({
           lang,
@@ -59,53 +70,33 @@ const TodoCard = ({
       )
     );
 
-    setParents((prevParents) => {
-      const newParents: GPTAnswerType[] = gptAnswer.map((prompt) => ({
-        ...prompt,
-        parentId: id,
-      }));
-      return [...prevParents, ...newParents];
-    });
+    if (typeof gptAnswer.payload === 'object' && 'choices' in gptAnswer.payload) {
+      const responsePayload = JSON.parse(gptAnswer.payload.choices[0].message.content);
+      console.log(responsePayload);
+      if (Array.isArray(responsePayload)) {
+        setParents((prevParents) => {
+          const newParents: GPTAnswerType[] = responsePayload.map((prompt) => ({
+            ...prompt,
+            parentId: id,
+          }));
+          return [...prevParents, ...newParents];
+        });
+      }
+    }
   };
-  const actualIsChecked = checkboxStates.hasOwnProperty(id) ? checkboxStates[id] : false;
-
   useEffect(() => {}, [gptAnswer, parents, hasChildren]);
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newIsChecked = e.target.checked;
     onCheckboxChange(id, newIsChecked);
-
-    setSelectedCards((prevSelectedCards) => {
-      if (newIsChecked) {
-        return [
-          ...prevSelectedCards,
-          {
-            id,
-            role,
-            start,
-            end,
-            description,
-            cardName,
-            isChecked: newIsChecked,
-            onCheckboxChange,
-            prompt,
-            prompts,
-            checkboxStates,
-            selectedCards,
-            setSelectedCards,
-          },
-        ];
-      } else {
-        return prevSelectedCards.filter((card) => card.id !== id);
-      }
-    });
+    setActualIsChecked(newIsChecked); // Update the local state for the current card
   };
   useEffect(() => {
     if (actualIsChecked !== checkboxStates[id]) {
       onCheckboxChange(id, actualIsChecked);
     }
   }, [actualIsChecked, checkboxStates, id, onCheckboxChange]);
-
+  console.log('parents:', parents);
   return (
     <li
       className={`flex flex-col justify-between gap-2 border rounded-lg p-3 border-gray ${
@@ -152,7 +143,7 @@ const TodoCard = ({
               end={child.end}
               description={child.description}
               cardName={child.cardName}
-              isChecked={actualIsChecked}
+              isChecked={checkboxStates.hasOwnProperty(child.id) ? checkboxStates[child.id] : false}
               onCheckboxChange={onCheckboxChange}
               prompt={child}
               prompts={prompts}
