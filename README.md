@@ -1,3 +1,15 @@
+# hackaton-chatty_AI_PM_Assistant
+[Github Pages](https://voice-assistant-demo.netlify.app/)
+### Стек технологий
+![](https://img.shields.io/badge/React-18.2.0-black?style=flat&logo=react)
+![](https://img.shields.io/badge/TypeScript-5.0.2-black?style=flat&logo=typescript)
+![](https://img.shields.io/badge/Redux-4.2.1-black?style=flat&logo=redux)
+![](https://img.shields.io/badge/Axios-1.4.0-black?style=flat&logo=Axios)
+![](https://img.shields.io/badge/Tailwind-3.3.3-black?style=flat&logo=Tailwindcss)
+#### API
+![](https://img.shields.io/badge/Web_Speech-API-black)
+ ![](https://img.shields.io/badge/OpenAI-API-black?style=flat&logo=openai)
+![](https://img.shields.io/badge/Trello-API-black?style=flat&logo=trello)
 ### Links
 
 * [link on github](https://github.com/Dimitry-prog/voice-assistant)
@@ -29,13 +41,7 @@ VITE_TRELLO_API_TOKEN=key=ac6d52cd851e6e0fd687ce36dda30d45&token=ATTA7194362b6f7
 
 - trello должен в себя включать, и key, и token. Например: key=ac6d5&token=ATTA71943
 
-### Stack
 
-* React
-* Redux toolkit
-* Typescript
-* Tailwind
-* Axios
 
 #### API
 
