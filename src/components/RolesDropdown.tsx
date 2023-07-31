@@ -64,7 +64,6 @@ const Dropdown = () => {
                     <button
                       className="mr-2"
                       onClick={() => {
-                        // handleRoleClickMin(i);
                         handleChangeMin(role.roleEn);
                       }}
                     >
@@ -74,7 +73,6 @@ const Dropdown = () => {
                     <button
                       className="ml-2"
                       onClick={() => {
-                        // handleRoleClickMax(i);
                         handleChangeMax(role.roleEn);
                       }}
                     >

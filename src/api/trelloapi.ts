@@ -1,5 +1,6 @@
-import { TRELLO_KEY, LABEL_ID } from '../utils/constants';
+import { LABEL_ID, TRELLO_KEY } from '../utils/constants';
 import { CardData } from '../types/promptTypes';
+
 type TrelloCard = {
   id: string;
 };
@@ -7,8 +8,6 @@ type TrelloCard = {
 const listId = '64c3ea44d179b00effc7ab34';
 
 export const createNewCard = async (cardData: CardData): Promise<void> => {
-  console.log('отправка запроса');
-
   const { description: name = 'description', start, end: due, role } = cardData;
 
   const idLabels = LABEL_ID[role as keyof typeof LABEL_ID];
@@ -27,8 +26,6 @@ export const createNewCard = async (cardData: CardData): Promise<void> => {
       },
       body: JSON.stringify(card),
     });
-
-    console.log(`Response: ${response.status} ${response.statusText}`);
   } catch (error) {
     console.error('Error creating card:', error);
   }
