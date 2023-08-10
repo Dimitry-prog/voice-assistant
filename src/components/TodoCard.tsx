@@ -52,7 +52,13 @@ const TodoCard = ({
     checkboxStates.hasOwnProperty(id) ? checkboxStates[id] : false
   );
 
-  const handleDecompose = async (id: string, description: string, start: string, role: string) => {
+  const handleDecompose = async (
+    id: string,
+    description: string,
+    start: string,
+    end: string,
+    role: string
+  ) => {
     const gptAnswer = await dispatch(
       getStructureGPTPrompt(
         REQUEST_OPENAI_DATA({
@@ -60,7 +66,7 @@ const TodoCard = ({
           text:
             'Task:' +
             description +
-            ` .additional conditions to the task: set the time ${start} interval needed to solve the task and decide which role can complete this task ${role}.`,
+            ` .additional conditions to the task: set the time ${start} interval needed to solve the task ${end} and decide which role can complete this task ${role}.`,
         })
       )
     );
@@ -136,7 +142,7 @@ const TodoCard = ({
           </span>
           <span className="mr-2 bg-yellow rounded-lg p-1">{role}</span>
           <button
-            onClick={() => handleDecompose(id, description, start, role)}
+            onClick={() => handleDecompose(id, description, start, end, role)}
             id="voice"
             type="button"
             aria-label="voice-new-item"

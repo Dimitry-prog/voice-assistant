@@ -9,11 +9,11 @@ export const REQUEST_OPENAI_DATA = ({
   lang,
   text,
 }: RequestOpenAIDataPropsType): RequestOpenAIType => ({
-  model: 'gpt-3.5-turbo',
+  model: 'gpt-3.5-turbo-16k',
   messages: [
     {
       role: 'system',
-      content: `Break down this task in as much detail as possible into subtasks.Return the answer only in the form of a code in this format [{"id": ${uuidv4()}, "parentId": null, "role": "frontend", "start": "start date", "end": "end date", "description": "describe what need to do here", "cardName": "short name for task", },]. And answer return on this language ${lang}`,
+      content: `${text},keep in mind that tasks can be executed in parallel, Break down this task in as much detail as possible into subtasks.Return the answer only in the form of a code in this format [{"id": ${uuidv4()}, "parentId": null, "role": "frontend", "start": "start date", "end": "end date", "description": "describe what need to do here", "cardName": "short name for task", },]. And answer return on this language ${lang}`,
     },
     {
       role: 'user',
