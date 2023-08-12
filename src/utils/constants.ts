@@ -1,5 +1,6 @@
 import { RequestOpenAIDataPropsType, RequestOpenAIType } from '../types/promptTypes';
 import { v4 as uuidv4 } from 'uuid';
+import { NotionCardType } from '../types/notionTypes';
 
 export const OPENAI_BASE_URL = import.meta.env.VITE_OPENAI_BASE_URL;
 export const OPENAI_CHAT_URL = `${OPENAI_BASE_URL}/chat/completions`;
@@ -48,3 +49,68 @@ export const LABEL_ID = {
   datascientist: '64c69f6692144f4c019648cf',
   QAengineer: '64c69f6d375c78887872ae36',
 };
+export const NOTION_KEY = import.meta.env.VITE_NOTION_API_TOKEN;
+export const NOTION_BASE_URL = import.meta.env.VITE_NOTION_BASE_URL;
+export const REQUEST_NOTION_CARD_DATA = (data: NotionCardType) => ({
+  parent: {
+    type: 'database_id',
+    database_id: import.meta.env.VITE_NOTION_DESK_ID,
+  },
+  properties: {
+    Role: {
+      id: 'LOQ%3F',
+      type: 'rich_text',
+      rich_text: [
+        {
+          type: 'text',
+          text: {
+            content: data.role,
+            link: null,
+          },
+          annotations: {
+            bold: true,
+            italic: false,
+            strikethrough: false,
+            underline: false,
+            code: true,
+            color: 'default',
+          },
+          plain_text: 'Front',
+          href: null,
+        },
+      ],
+    },
+    Name: {
+      id: 'title',
+      type: 'title',
+      title: [
+        {
+          type: 'text',
+          text: {
+            content: data.title,
+            link: null,
+          },
+          annotations: {
+            bold: false,
+            italic: false,
+            strikethrough: false,
+            underline: false,
+            code: false,
+            color: 'default',
+          },
+          plain_text: 'This is also not done',
+          href: null,
+        },
+      ],
+    },
+    Date: {
+      id: 'M%3BBw',
+      type: 'date',
+      date: {
+        start: data.date.start,
+        end: data.date.end,
+        time_zone: null,
+      },
+    },
+  },
+});

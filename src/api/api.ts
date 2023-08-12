@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { AxiosKnownErrorType } from '../types/index';
-import { OPENAI_CHAT_URL, OPENAI_KEY } from '../utils/constants';
+import { NOTION_BASE_URL, NOTION_KEY, OPENAI_CHAT_URL, OPENAI_KEY } from '../utils/constants';
 
 export const api = axios.create();
 export const apiOpenAI = axios.create({
@@ -8,6 +8,15 @@ export const apiOpenAI = axios.create({
   headers: {
     'Content-Type': 'application/json',
     Authorization: 'Bearer ' + OPENAI_KEY,
+  },
+});
+
+export const apiNotion = axios.create({
+  baseURL: NOTION_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer ' + NOTION_KEY,
+    'Notion-Version': '2022-06-28',
   },
 });
 
