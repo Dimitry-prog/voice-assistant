@@ -62,8 +62,6 @@ const TodoCards = () => {
                 isChecked={!!checkboxStates[item.id]}
                 onCheckboxChange={handleCheckboxChange}
                 checkboxStates={checkboxStates}
-                selectedCards={selectedCards}
-                setSelectedCards={setSelectedCards}
               />
             ))}
           </ul>

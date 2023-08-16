@@ -23,20 +23,7 @@ type TodoCardProps = {
   setSelectedCards: React.Dispatch<React.SetStateAction<TodoCardProps[]>>;
 };
 
-const TodoCard = ({
-  id,
-  role,
-  start,
-  end,
-  description,
-  isChecked,
-  onCheckboxChange,
-  prompt,
-  prompts,
-  checkboxStates,
-  selectedCards,
-  setSelectedCards,
-}: TodoCardProps) => {
+const TodoCard = ({ id, role, start, end, description, prompts }: TodoCardProps) => {
   const [parents, setParents] = useState<GPTAnswerType[]>(prompts);
   const hasChildren: GPTAnswerType[] = parents.filter((child) => child.parentId === id);
   const dispatch = useAppDispatch();
@@ -44,9 +31,7 @@ const TodoCard = ({
   const gptAnswerStatus = useAppSelector((state) => state.prompt.gptAnswerStatus);
   const gptAnswer = useAppSelector((state) => state.prompt.gptAnswer);
 
-  const [actualIsChecked, setActualIsChecked] = useState(
-    checkboxStates.hasOwnProperty(id) ? checkboxStates[id] : false
-  );
+  const [actualIsChecked, setActualIsChecked] = useState(false);
 
   const handleDecompose = async (
     id: string,
@@ -82,41 +67,8 @@ const TodoCard = ({
   };
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newIsChecked = e.target.checked;
-    onCheckboxChange(id, newIsChecked);
     setActualIsChecked(newIsChecked);
-
-    if (newIsChecked) {
-      setSelectedCards((prevSelectedCards) => [
-        ...prevSelectedCards,
-        {
-          id,
-          role,
-          start,
-          end,
-          description,
-          isChecked: newIsChecked,
-          onCheckboxChange,
-          checkboxStates,
-          prompt,
-          prompts,
-          selectedCards,
-          setSelectedCards,
-        },
-      ]);
-    } else {
-      setSelectedCards((prevSelectedCards) => prevSelectedCards.filter((card) => card.id !== id));
-    }
   };
-  // useEffect(() => {
-  //   if (actualIsChecked !== checkboxStates[id]) {
-  //     onCheckboxChange(id, actualIsChecked);
-  //   }
-  // }, []);
-  // }, [actualIsChecked, checkboxStates, id, onCheckboxChange]);
-
-  console.log(parents);
-  console.log(hasChildren);
-  console.log(gptAnswer);
 
   return (
     <li
@@ -163,13 +115,8 @@ const TodoCard = ({
               start={child.start}
               end={child.end}
               description={child.description}
-              isChecked={checkboxStates.hasOwnProperty(child.id) ? checkboxStates[child.id] : false}
-              onCheckboxChange={onCheckboxChange}
               prompt={child}
               prompts={prompts}
-              checkboxStates={checkboxStates}
-              selectedCards={selectedCards}
-              setSelectedCards={setSelectedCards}
             />
           ))}
         </ul>
