@@ -14,7 +14,6 @@ type TodoCardProps = {
   start: string;
   end: string;
   description: string;
-  cardName: string;
   isChecked: boolean;
   onCheckboxChange: (id: string, isChecked: boolean) => void;
   checkboxStates: { [id: string]: boolean };
@@ -30,12 +29,11 @@ const TodoCard = ({
   start,
   end,
   description,
-  cardName,
   isChecked,
   onCheckboxChange,
   prompt,
   prompts,
-  checkboxStates, // Include checkboxStates in the props
+  checkboxStates,
   selectedCards,
   setSelectedCards,
 }: TodoCardProps) => {
@@ -45,8 +43,6 @@ const TodoCard = ({
   const lang = useAppSelector((state) => state.prompt.lang);
   const gptAnswerStatus = useAppSelector((state) => state.prompt.gptAnswerStatus);
   const gptAnswer = useAppSelector((state) => state.prompt.gptAnswer);
-
-  useEffect(() => {}, [gptAnswer, parents, hasChildren]);
 
   const [actualIsChecked, setActualIsChecked] = useState(
     checkboxStates.hasOwnProperty(id) ? checkboxStates[id] : false
@@ -63,16 +59,16 @@ const TodoCard = ({
       getStructureGPTPrompt(
         REQUEST_OPENAI_DATA({
           lang,
-          text:
-            'Task:' +
-            description +
-            ` .additional conditions to the task: set the time ${start} interval needed to solve the task ${end} and decide which role can complete this task ${role}.`,
+          text: `System: Please provide a solution to the following task:
+          Task: ${description}. Additional conditions for the task: set the time interval from ${start} to ${end} and decide which role can complete this task ${role}`,
         })
       )
     );
 
     if (typeof gptAnswer.payload === 'object' && 'choices' in gptAnswer.payload) {
       const responsePayload = JSON.parse(gptAnswer.payload.choices[0].message.content);
+      console.log(responsePayload);
+
       if (Array.isArray(responsePayload)) {
         setParents((prevParents) => {
           const newParents: GPTAnswerType[] = responsePayload.map((prompt) => ({
@@ -84,8 +80,6 @@ const TodoCard = ({
       }
     }
   };
-  useEffect(() => {}, [gptAnswer, parents, hasChildren]);
-
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newIsChecked = e.target.checked;
     onCheckboxChange(id, newIsChecked);
@@ -100,7 +94,6 @@ const TodoCard = ({
           start,
           end,
           description,
-          cardName,
           isChecked: newIsChecked,
           onCheckboxChange,
           checkboxStates,
@@ -114,11 +107,17 @@ const TodoCard = ({
       setSelectedCards((prevSelectedCards) => prevSelectedCards.filter((card) => card.id !== id));
     }
   };
-  useEffect(() => {
-    if (actualIsChecked !== checkboxStates[id]) {
-      onCheckboxChange(id, actualIsChecked);
-    }
-  }, [actualIsChecked, checkboxStates, id, onCheckboxChange]);
+  // useEffect(() => {
+  //   if (actualIsChecked !== checkboxStates[id]) {
+  //     onCheckboxChange(id, actualIsChecked);
+  //   }
+  // }, []);
+  // }, [actualIsChecked, checkboxStates, id, onCheckboxChange]);
+
+  console.log(parents);
+  console.log(hasChildren);
+  console.log(gptAnswer);
+
   return (
     <li
       className={`flex flex-col justify-between gap-2 border rounded-lg p-3 border-gray ${
@@ -164,7 +163,6 @@ const TodoCard = ({
               start={child.start}
               end={child.end}
               description={child.description}
-              cardName={child.cardName}
               isChecked={checkboxStates.hasOwnProperty(child.id) ? checkboxStates[child.id] : false}
               onCheckboxChange={onCheckboxChange}
               prompt={child}

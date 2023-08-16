@@ -5,5 +5,6 @@
 @tailwind utilities;
 
 #root {
-    @apply font-body text-text bg-gray
+  @apply font-body text-text
+     /* bg-gray */;
 }

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TodoCard from './TodoCard';
 import ExportDropdown from './ExportDropdown';
 import { useAppSelector } from '../hooks/reduxHooks';
 import Preloader from './Preloader/Preloader';
 import { GPTAnswerType } from '../types/promptTypes';
+import { v4 as uuidv4 } from 'uuid';
 
 type TodoCardProps = {
   id: string;
@@ -22,7 +23,13 @@ type TodoCardProps = {
 };
 
 const TodoCards = () => {
-  const gptPrompt = useAppSelector((state) => state.prompt.gptPrompt);
+  const gptPrompt = useAppSelector((state) => state.prompt.gptPrompt).map((parent) => {
+    return {
+      ...parent,
+      parentId: null,
+      id: uuidv4(),
+    };
+  });
   const status = useAppSelector((state) => state.prompt.status);
   const [checkboxStates, setCheckboxStates] = useState<{ [id: string]: boolean }>({});
 
@@ -35,6 +42,9 @@ const TodoCards = () => {
       [id]: isChecked,
     }));
   };
+
+  // console.log(gptPrompt);
+  // console.log(noParents);
 
   return (
     <>
