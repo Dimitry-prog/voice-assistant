@@ -7,7 +7,7 @@ type TrelloCard = {
 
 const listId = '64c3ea44d179b00effc7ab34';
 
-export const createNewCard = async (cardData: CardData): Promise<void> => {
+export const createNewCard = async (cardData: CardData): Promise<string | null> => {
   const { description: name = 'description', start, end: due, role } = cardData;
 
   const idLabels = LABEL_ID[role as keyof typeof LABEL_ID];
@@ -26,11 +26,21 @@ export const createNewCard = async (cardData: CardData): Promise<void> => {
       },
       body: JSON.stringify(card),
     });
+    if (response.ok) {
+      const responseData = await response.json();
+      const boardId = responseData.idBoard;
+
+      const boardUrl = `https://trello.com/b/${boardId}`;
+      return boardUrl;
+    } else {
+      console.error('Error creating card. Server responded with:', response.status);
+      return null;
+    }
   } catch (error) {
     console.error('Error creating card:', error);
+    return null;
   }
 };
-
 export const deleteAllCards = async (): Promise<void> => {
   const getListUrl = `https://api.trello.com/1/lists/${listId}/cards?${TRELLO_KEY}`;
 
