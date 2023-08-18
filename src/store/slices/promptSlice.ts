@@ -1,5 +1,6 @@
 import { ActionReducerMapBuilder, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getGPTPrompt, getStructureGPTPrompt } from '../../api/promptApi';
+import { v4 as uuidv4 } from 'uuid';
 import {
   GPTAnswerType,
   GPTConfigDateType,
@@ -71,7 +72,17 @@ const promptSlice = createSlice({
       })
       .addCase(getGPTPrompt.fulfilled, (state, action) => {
         state.status = 'success';
-        state.gptPrompt = JSON.parse(action.payload.choices[0].message.content);
+        console.log(state.gptPrompt);
+
+        state.gptPrompt = JSON.parse(action.payload.choices[0].message.content).map(
+          (parent: GPTAnswerType) => {
+            return {
+              ...parent,
+              parentId: null,
+              id: uuidv4(),
+            };
+          }
+        );
       })
       .addCase(getGPTPrompt.rejected, (state, action) => {
         state.status = 'error';
@@ -83,7 +94,15 @@ const promptSlice = createSlice({
       })
       .addCase(getStructureGPTPrompt.fulfilled, (state, action) => {
         state.gptAnswerStatus = 'success';
-        state.gptAnswer = JSON.parse(action.payload.choices[0].message.content);
+        state.gptAnswer = JSON.parse(action.payload.choices[0].message.content).map(
+          (parent: GPTAnswerType) => {
+            return {
+              ...parent,
+              parentId: null,
+              id: uuidv4(),
+            };
+          }
+        );
       })
       .addCase(getStructureGPTPrompt.rejected, (state, action) => {
         state.gptAnswerStatus = 'error';
