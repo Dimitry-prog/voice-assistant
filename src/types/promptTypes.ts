@@ -78,5 +78,4 @@ export type CardData = {
   start: string;
   end: string;
   description: string;
-  cardName: string;
 };
