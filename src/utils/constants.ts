@@ -14,7 +14,7 @@ export const REQUEST_OPENAI_DATA = ({
   messages: [
     {
       role: 'system',
-      content: `${text}. Keep in mind that tasks can be executed in parallel. Break down this task into subtasks as detailed as possible. Provide the answer only in the form of a code using this format: [{"role": "role" , "start": "start date", "end": "end date", "description": "describe what needs to be done here in ${lang}"}, ...other subtasks].`,
+      content: `${text}. Keep in mind that tasks can be executed in parallel. Break down this task into subtasks as detailed as possible.There should always be more than one subtasks and they should be different from the original task. Provide the answer only in the form of a code using this format: [{"role": "frontend" , "start": "start date", "end": "end date", "description": "describe what needs to be done here in ${lang}"}, ...other subtasks].There should always be more than one subtasks`,
     },
     {
       role: 'user',

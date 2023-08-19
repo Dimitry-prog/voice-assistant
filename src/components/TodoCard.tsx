@@ -62,7 +62,7 @@ const TodoCard = ({
         REQUEST_OPENAI_DATA({
           lang,
           text: `System: Please provide a solution to the following task:
-          Task: ${description}. Additional conditions for the task: set the time interval from ${start} to ${end} and decide which role can complete this task ${role}`,
+          Task: ${description}. Additional conditions for the task: set the time interval from ${start} to ${end} and complete this task only ${role}`,
         })
       )
     );
