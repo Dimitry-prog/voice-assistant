@@ -5,9 +5,29 @@ type TrelloCard = {
   id: string;
 };
 
-const listId = '64c3ea44d179b00effc7ab34';
+function getRandomIdFromArray(ids: string[]): string | null {
+  if (ids.length === 0) {
+    return null;
+  }
+
+  const randomIndex = Math.floor(Math.random() * ids.length);
+  return ids[randomIndex];
+}
+
+const listsId = [
+  '64c3ea44d179b00effc7ab34',
+  // '64e0cf96ef9138ea9ebc7ff9',
+  // '64e0cfad0578a29e4d6f8c94',
+  // '64e0cfbc3b4b5b9563950857',
+  // '64e0cfc5244814f1bad4d973',
+];
+
+const listId = getRandomIdFromArray(listsId);
 
 export const createNewCard = async (cardData: CardData): Promise<string | null> => {
+  const getListUrl = `https://api.trello.com/1/cards?idList=${listId}&${TRELLO_KEY}`;
+  console.log(getListUrl);
+
   const { description: name = 'description', start, end: due, role } = cardData;
 
   const idLabels = LABEL_ID[role as keyof typeof LABEL_ID];
@@ -43,6 +63,7 @@ export const createNewCard = async (cardData: CardData): Promise<string | null> 
 };
 export const deleteAllCards = async (): Promise<void> => {
   const getListUrl = `https://api.trello.com/1/lists/${listId}/cards?${TRELLO_KEY}`;
+  console.log(getListUrl);
 
   try {
     const response = await fetch(getListUrl);
