@@ -1,5 +1,9 @@
 import { LABEL_ID, TRELLO_KEY } from '../utils/constants';
 import { CardData } from '../types/promptTypes';
+const apiKey = 'ac6d52cd851e6e0fd687ce36dda30d45';
+const redirectUri = 'https://voice-assistant-demo.netlify.app/';
+const scope = 'read,write';
+const authorizeUrl = `https://trello.com/1/authorize?response_type=code&key=${apiKey}&scope=${scope}&redirect_uri=${redirectUri}`;
 
 type TrelloCard = {
   id: string;
@@ -39,7 +43,7 @@ export const createNewCard = async (cardData: CardData): Promise<string | null> 
     idLabels,
   };
   try {
-    const response = await fetch(`https://api.trello.com/1/cards?idList=${listId}&${TRELLO_KEY}`, {
+    const response = await fetch(getListUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -91,5 +95,32 @@ export const deleteAllCards = async (): Promise<void> => {
     });
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const authTrello = () => {
+  window.location.href = authorizeUrl;
+};
+export const createNewBoard = async (token: string) => {
+  const createBoardUrl = `https://api.trello.com/1/boards/?name={Название доски из инпута запроса}&key=${apiKey}&token=${token}`;
+
+  console.log('poshlp');
+
+  try {
+    const response = await fetch(createBoardUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.ok) {
+      console.log('доска созданна');
+    } else {
+      console.error('Error creating board. Server responded with:', response.status);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error creating board:', error);
+    return null;
   }
 };
