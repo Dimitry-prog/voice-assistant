@@ -2,24 +2,19 @@ import React, { useState } from 'react';
 import { ListType } from '../types/trelloTypes';
 import {
   deleteAllCards,
-  createLabel,
-  createCards,
+  createLabels,
+  createCard,
   deleteAllLabels,
-  getAllList,
+  getAllLists,
 } from '../api/trelloapi';
 import { CardData } from '../types/promptTypes';
 import { removeDuplicateCardsByRole } from '../utils/removeDuplicateCardsByRole';
 import ExportBoardPopup from './ExportBoardPopup';
 
+import { BOARD_IDS } from '../utils/constants';
 import arrowDownUrl from '../images/fe_arrow-down.svg';
 const token = 'ATTA7194362b6f7b0932ece543b8574095151c8cb16379ac42860d2ae2c3e76f597c81048FFF';
-const boardIds = [
-  '64e0cf96ef9138ea9ebc7ff8',
-  '64e0cf96ef9138ea9ebc7ff8',
-  '64e0cf96ef9138ea9ebc7ff8',
-  '64e0cf96ef9138ea9ebc7ff8',
-  '64e0cf96ef9138ea9ebc7ff8',
-];
+
 function getRandomIdFromArray(ids: string[]): string | null {
   if (ids.length === 0) {
     return null;
@@ -51,20 +46,40 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
   const handleDropdownClick = (): void => setDropdownState({ open: !dropdownState.open });
 
   const handleClick = async (cards: CardData[]): Promise<void> => {
-    const boardId = getRandomIdFromArray(boardIds);
+    const boardId = getRandomIdFromArray(BOARD_IDS);
     if (boardId !== null) {
-      await deleteAllLabels(token, boardId);
-      const lists = await getAllList(token, boardId);
-      const backlogList = lists.find((item: ListType) => item.name === 'Backlog');
-      const roles = removeDuplicateCardsByRole(cards);
-      const labelId = await createLabel(token, boardId, roles);
-      if (backlogList) {
-        await deleteAllCards(token, backlogList.id);
-        for (const card of cards) {
-          await createCards(token, backlogList.id, labelId, card);
-        }
+      try {
+        await processBoard(token, boardId, cards);
+      } catch (error) {
+        console.error(error);
       }
     }
+  };
+
+  const processBoard = async (token: string, boardId: string, cards: CardData[]): Promise<void> => {
+    await deleteAllLabels(token, boardId);
+    const backlogList = await getBacklogList(token, boardId);
+    const roles = removeDuplicateCardsByRole(cards);
+    const labelId = await createLabels(token, boardId, roles);
+    if (backlogList) {
+      await updateBacklogList(token, backlogList.id, labelId, cards);
+    }
+  };
+
+  const getBacklogList = async (token: string, boardId: string): Promise<ListType | undefined> => {
+    const lists = await getAllLists(token, boardId);
+    return lists.find((item: ListType) => item.name === 'Backlog');
+  };
+
+  const updateBacklogList = async (
+    token: string,
+    listId: string,
+    labelId: Record<string, string> = {},
+    cards: CardData[]
+  ): Promise<void> => {
+    await deleteAllCards(token, listId);
+    const createCardPromises = cards.map((card) => createCard(token, listId, labelId, card));
+    await Promise.all(createCardPromises);
   };
 
   return (

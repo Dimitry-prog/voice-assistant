@@ -4,10 +4,11 @@ import ExportDropdown from './ExportDropdown';
 import { useAppSelector } from '../hooks/reduxHooks';
 import { removeDuplicateCardsByRole } from '../utils/removeDuplicateCardsByRole';
 import Preloader from './Preloader/Preloader';
+import { CardData } from '../types/promptTypes';
 
 const LIST_NAMES = ['Done', 'Blocked', 'Review', 'Pending', 'Backlog'];
 
-import { authTrello, createBoard, createLists, createLabel, createCards } from '../api/trelloapi';
+import { authTrello, createBoard, createLists, createLabels, createCard } from '../api/trelloapi';
 
 type SelectedCardProps = {
   id: string;
@@ -45,16 +46,18 @@ const TodoCards = () => {
   const authClick = () => {
     authTrello();
   };
-  const exportClick = async () => {
+
+  const exportClick = async (cards: CardData[]) => {
     if (token) {
       const boardId = await createBoard(token, 'PMAI Board');
       const listIds = await createLists(token, boardId);
       const roles = removeDuplicateCardsByRole(selectedCards);
-      const labelId = await createLabel(token, boardId, roles);
+      const labelId = await createLabels(token, boardId, roles);
       const backlogListId = listIds[LIST_NAMES.indexOf('Backlog')];
-      for (const selectedCard of selectedCards) {
-        await createCards(token, backlogListId, labelId, selectedCard);
-      }
+      const createCardPromises = cards.map((card) =>
+        createCard(token, backlogListId, labelId, card)
+      );
+      await Promise.all(createCardPromises);
     } else {
       console.log('Нажмите 2 кнопку');
     }
@@ -90,7 +93,7 @@ const TodoCards = () => {
           Зарегаться в Trello
         </button>
         <button
-          onClick={exportClick}
+          onClick={() => exportClick(selectedCards)}
           className="inline-block w-52 mr-4 justify-between text-left bg-green p-3 hover:opacity-70 border border-gray rounded-lg"
         >
           Создать у себя доску

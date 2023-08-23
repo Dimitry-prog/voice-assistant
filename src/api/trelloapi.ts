@@ -1,136 +1,100 @@
-import { LABEL_ID, TRELLO_KEY } from '../utils/constants';
 import { CardData } from '../types/promptTypes';
 import { TrelloCard, LabelsIds, LabelType, ListType } from '../types/trelloTypes';
+import { LIST_NAMES, TRELLO_LABEL_COLORS } from '../utils/constants';
+
 const API_KEY = 'ac6d52cd851e6e0fd687ce36dda30d45';
-// const token = 'ATTA7194362b6f7b0932ece543b8574095151c8cb16379ac42860d2ae2c3e76f597c81048FFF';
+
 const redirectUri = 'http://localhost:5173/';
 // const redirectUri = 'https://voice-assistant-demo.netlify.app/';
 const scope = 'read,write';
 const authorizeUrl = `https://trello.com/1/authorize?response_type=code&key=${API_KEY}&scope=${scope}&redirect_uri=${redirectUri}`;
-const LIST_NAMES = ['Done', 'Blocked', 'Review', 'Pending', 'Backlog'];
 
-function getRandomIdFromArray(ids: string[]): string | null {
-  if (ids.length === 0) {
-    return null;
-  }
-
-  const randomIndex = Math.floor(Math.random() * ids.length);
-  return ids[randomIndex];
-}
-
-const listsId = [
-  '64c3ea44d179b00effc7ab34',
-  '64e0cf96ef9138ea9ebc7ff9',
-  '64e0cfad0578a29e4d6f8c94',
-  '64e0cfbc3b4b5b9563950857',
-  '64e0cfc5244814f1bad4d973',
-];
-
-const listId = getRandomIdFromArray(listsId);
-
-export const createNewCard = async (cardData: CardData): Promise<string | null> => {
-  const getListUrl = `https://api.trello.com/1/cards?idList=${listId}&${TRELLO_KEY}`;
-  console.log(getListUrl);
-
-  const { description: name = 'description', start, end: due, role } = cardData;
-
-  const idLabels = LABEL_ID[role as keyof typeof LABEL_ID];
-
-  const card = {
-    name,
-    due,
-    start,
-    idLabels,
-  };
-  try {
-    const response = await fetch(getListUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(card),
-    });
-    if (response.ok) {
-      const responseData = await response.json();
-      const boardId = responseData.idBoard;
-
-      const boardUrl = `https://trello.com/b/${boardId}`;
-      return boardUrl;
-    } else {
-      console.error('Error creating card. Server responded with:', response.status);
-      return null;
-    }
-  } catch (error) {
-    console.error('Error creating card:', error);
-    return null;
-  }
-};
-export const deleteAllCards = async (token: string, listId: string): Promise<void> => {
+const getCardsFromList = async (token: string, listId: string) => {
   const getListUrl = `https://api.trello.com/1/lists/${listId}/cards?key=${API_KEY}&token=${token}`;
 
   try {
     const response = await fetch(getListUrl);
-
     if (!response.ok) {
       throw new Error('Failed to get cards from the list.');
     }
+    return response.json();
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-    const cards = await response.json();
-    const deleteRequests = cards.map((card: LabelType) => {
-      const deleteCardUrl = `https://api.trello.com/1/cards/${card.id}?key=${API_KEY}&token=${token}`;
-      return fetch(deleteCardUrl, {
-        method: 'DELETE',
-      });
+const deleteCard = async (token: string, cardId: string) => {
+  const deleteCardUrl = `https://api.trello.com/1/cards/${cardId}?key=${API_KEY}&token=${token}`;
+  try {
+    const response = await fetch(deleteCardUrl, {
+      method: 'DELETE',
     });
+    return response.ok;
+  } catch (error) {
+    console.error(`Failed to delete card with ID ${cardId}.`);
+  }
+};
 
-    const deleteResponses = await Promise.all(deleteRequests);
-    deleteResponses.forEach((deleteResponse: Response, index) => {
+export const deleteAllCards = async (token: string, listId: string) => {
+  try {
+    const cards = await getCardsFromList(token, listId);
+    const deletePromises = cards.map((card: TrelloCard) => deleteCard(token, card.id));
+    const deleteResults = await Promise.all(deletePromises);
+
+    deleteResults.forEach((success, index) => {
       const card = cards[index];
-      if (deleteResponse.ok) {
+      if (success) {
         console.log(`Card with ID ${card.id} has been deleted.`);
-      } else {
-        console.error(`Failed to delete card with ID ${card.id}.`);
       }
     });
   } catch (error) {
     console.error(error);
   }
 };
-export const deleteAllLabels = async (token: string, boardId: string): Promise<void> => {
+
+const getLabelsFromBoard = async (token: string, boardId: string): Promise<LabelType[]> => {
   const getBoardUrl = `https://api.trello.com/1/boards/${boardId}/labels?key=${API_KEY}&token=${token}`;
-  console.log(getBoardUrl);
+
+  const response = await fetch(getBoardUrl);
+  if (!response.ok) {
+    throw new Error('Failed to get labels from the board.');
+  }
+
+  const labels = await response.json();
+  return labels;
+};
+
+const deleteLabel = async (token: string, labelId: string): Promise<void> => {
+  const deleteLabelUrl = `https://api.trello.com/1/labels/${labelId}?key=${API_KEY}&token=${token}`;
 
   try {
-    const response = await fetch(getBoardUrl);
+    const deleteResponse = await fetch(deleteLabelUrl, {
+      method: 'DELETE',
+    });
 
-    if (!response.ok) {
-      throw new Error('Failed to get labels from the board.');
+    if (deleteResponse.ok) {
+      console.log(`Label with ID ${labelId} has been deleted.`);
+    } else {
+      console.error(`Failed to delete label with ID ${labelId}.`);
     }
+  } catch (error) {
+    console.error(`An error occurred while deleting label with ID ${labelId}:`, error);
+  }
+};
 
-    const labels = await response.json();
+export const deleteAllLabels = async (token: string, boardId: string): Promise<void> => {
+  try {
+    const labels = await getLabelsFromBoard(token, boardId);
     console.log(labels);
-    const deleteRequests = labels.map((label: TrelloCard) => {
-      const deleteCardUrl = `https://api.trello.com/1/labels/${label.id}?key=${API_KEY}&token=${token}`;
-      return fetch(deleteCardUrl, {
-        method: 'DELETE',
-      });
-    });
 
-    const deleteResponses = await Promise.all(deleteRequests);
-    deleteResponses.forEach((deleteResponse: Response, index) => {
-      const label = labels[index];
-      if (deleteResponse.ok) {
-        console.log(`label with ID ${label.id} has been deleted.`);
-      } else {
-        console.error(`Failed to delete label with ID ${label.id}.`);
-      }
-    });
+    const deletePromises = labels.map((label: LabelType) => deleteLabel(token, label.id));
+    await Promise.all(deletePromises);
   } catch (error) {
     console.error(error);
   }
 };
 
-export const getAllList = async (token: string, boardId: string): Promise<ListType[]> => {
+export const getAllLists = async (token: string, boardId: string): Promise<ListType[]> => {
   const getBoardUrl = `https://api.trello.com/1/boards/${boardId}/lists?key=${API_KEY}&token=${token}`;
   console.log(getBoardUrl);
 
@@ -152,61 +116,81 @@ export const authTrello = () => {
 };
 
 export const createBoard = async (token: string, BOARD_NAME: string) => {
-  const response = await fetch(
-    `https://api.trello.com/1/boards/?key=${API_KEY}&token=${token}&name=${BOARD_NAME}&defaultLists=false`,
-    { method: 'POST' }
-  );
-  const boardData = await response.json();
-  return boardData.id;
+  try {
+    const response = await fetch(
+      `https://api.trello.com/1/boards/?key=${API_KEY}&token=${token}&name=${BOARD_NAME}&defaultLists=false`,
+      { method: 'POST' }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to create board');
+    }
+
+    const boardData = await response.json();
+    return boardData.id;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+const createList = async (token: string, boardId: string, listName: string) => {
+  console.log(listName);
+
+  const url = `https://api.trello.com/1/lists/?key=${API_KEY}&token=${token}&name=${listName}&idBoard=${boardId}`;
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+    });
+    const listData = await response.json();
+    return listData.id;
+  } catch (error) {
+    console.error(`Error creating list ${listName}:`, error);
+    throw error;
+  }
 };
 
 export const createLists = async (token: string, boardId: string) => {
-  const listIds = [];
-  for (const listName of LIST_NAMES) {
-    const response = await fetch(
-      `https://api.trello.com/1/lists/?key=${API_KEY}&token=${token}&name=${listName}&idBoard=${boardId}`,
-      { method: 'POST' }
-    );
-    const listData = await response.json();
-    listIds.push(listData.id);
-  }
-  return listIds;
-};
+  try {
+    const listIds = [];
 
-export const createLabel = async (token: string, boardId: string, roles: string[]) => {
-  console.log(roles);
-  const labelsIds: Record<string, string> = {};
-  const availableColors = [
-    'yellow',
-    'purple',
-    'blue',
-    'red',
-    'green',
-    'orange',
-    'black',
-    'sky',
-    'pink',
-    'lime',
-  ];
-  for (const role of roles) {
-    console.log(role);
-    const randomColor = availableColors.pop();
-    const response = await fetch(
-      `https://api.trello.com/1/labels/?key=${API_KEY}&token=${token}&name=${role}&color=${randomColor}&idBoard=${boardId}`,
-      { method: 'POST' }
-    );
-    const labelData = await response.json();
-    labelsIds[role] = labelData.id;
+    for (const listName of LIST_NAMES) {
+      const listId = await createList(token, boardId, listName);
+      listIds.push(listId);
+    }
+
+    return listIds;
+  } catch (error) {
+    console.error('Error creating lists:', error);
+    throw error;
   }
+};
+export const createLabels = async (token: string, boardId: string, roles: string[]) => {
+  const labelsIds: Record<string, string> = {};
+
+  const labelPromises = roles.map(async (role) => {
+    try {
+      const randomColor = TRELLO_LABEL_COLORS.pop();
+      const url = `https://api.trello.com/1/labels/?key=${API_KEY}&token=${token}&name=${role}&color=${randomColor}&idBoard=${boardId}`;
+      const response = await fetch(url, { method: 'POST' });
+      const labelData = await response.json();
+      labelsIds[role] = labelData.id;
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+  await Promise.allSettled(labelPromises);
+
   return labelsIds;
 };
 
-export const createCards = async (
+export const createCard = async (
   token: string,
   listId: string,
   labelsIds: LabelsIds,
   selectedCard: CardData
-): Promise<string | null> => {
+) => {
   const labelId = labelsIds[selectedCard.role as keyof typeof labelsIds];
   console.log(labelId);
 
@@ -220,27 +204,17 @@ export const createCards = async (
     start,
     idLabels: labelId,
   };
+  console.log(card);
 
   try {
-    const response = await fetch(url, {
+    await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(card),
     });
-
-    if (response.ok) {
-      const responseData = await response.json();
-      const boardId = responseData.idBoard;
-      const boardUrl = `https://trello.com/b/${boardId}`;
-      return boardUrl;
-    } else {
-      console.error('Error creating card. Server responded with:', response.status);
-      return null;
-    }
   } catch (error) {
-    console.error('Error creating card:', error);
-    return null;
+    console.error(error);
   }
 };
