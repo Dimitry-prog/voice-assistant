@@ -1,10 +1,28 @@
 import React, { useState } from 'react';
-import { createNewCard, deleteAllCards } from '../api/trelloapi';
+import { ListType } from '../types/trelloTypes';
+import {
+  deleteAllCards,
+  createLabels,
+  createCard,
+  deleteAllLabels,
+  getAllLists,
+} from '../api/trelloapi';
 import { CardData } from '../types/promptTypes';
-
+import { removeDuplicateCardsByRole } from '../utils/removeDuplicateCardsByRole';
 import ExportBoardPopup from './ExportBoardPopup';
 
+import { BOARD_IDS } from '../utils/constants';
 import arrowDownUrl from '../images/fe_arrow-down.svg';
+const token = 'ATTA7194362b6f7b0932ece543b8574095151c8cb16379ac42860d2ae2c3e76f597c81048FFF';
+
+function getRandomIdFromArray(ids: string[]): string | null {
+  if (ids.length === 0) {
+    return null;
+  }
+
+  const randomIndex = Math.floor(Math.random() * ids.length);
+  return ids[randomIndex];
+}
 
 type TodoCardProps = {
   gptAnswer: CardData[];
@@ -26,41 +44,42 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
   };
 
   const handleDropdownClick = (): void => setDropdownState({ open: !dropdownState.open });
-  const handleAllClick = async (): Promise<void> => {
-    await deleteAllCards();
-    const createdCardPromises = gptAnswer.map(async (cardData: CardData) => {
-      return createNewCard(cardData);
-    });
-    const createdBoardUrls = await Promise.all(createdCardPromises);
-    const boardUrl = createdBoardUrls.find((url) => url !== null) as string;
 
-    if (boardUrl !== undefined) {
-      setIsInfoTooltip({
-        isOpen: true,
-        successful: true,
-        text: boardUrl,
-      });
-    } else {
-      console.error('Не удалось создать карточки.');
+  const handleClick = async (cards: CardData[]): Promise<void> => {
+    const boardId = getRandomIdFromArray(BOARD_IDS);
+    if (boardId !== null) {
+      try {
+        await processBoard(token, boardId, cards);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
-  const handleOnlySelectedClick = async (): Promise<void> => {
-    await deleteAllCards();
-    const createdCardPromises = modifiedTodoCards.map(async (cardData: CardData) => {
-      return createNewCard(cardData);
-    });
-    const createdBoardUrls = await Promise.all(createdCardPromises);
-    const boardUrl = createdBoardUrls.find((url) => url !== null) as string;
 
-    if (boardUrl !== undefined) {
-      setIsInfoTooltip({
-        isOpen: true,
-        successful: true,
-        text: boardUrl,
-      });
-    } else {
-      console.error('Не удалось создать карточки.');
+  const processBoard = async (token: string, boardId: string, cards: CardData[]): Promise<void> => {
+    await deleteAllLabels(token, boardId);
+    const backlogList = await getBacklogList(token, boardId);
+    const roles = removeDuplicateCardsByRole(cards);
+    const labelId = await createLabels(token, boardId, roles);
+    if (backlogList) {
+      await updateBacklogList(token, backlogList.id, labelId, cards);
     }
+  };
+
+  const getBacklogList = async (token: string, boardId: string): Promise<ListType | undefined> => {
+    const lists = await getAllLists(token, boardId);
+    return lists.find((item: ListType) => item.name === 'Backlog');
+  };
+
+  const updateBacklogList = async (
+    token: string,
+    listId: string,
+    labelId: Record<string, string> = {},
+    cards: CardData[]
+  ): Promise<void> => {
+    await deleteAllCards(token, listId);
+    const createCardPromises = cards.map((card) => createCard(token, listId, labelId, card));
+    await Promise.all(createCardPromises);
   };
 
   return (
@@ -85,12 +104,15 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
             <div className="">
               <ul>
                 <li className="w-52 p-3 rounded-lg hover:bg-lightgreen cursor-pointer">
-                  <button className="w-full text-left" onClick={handleAllClick}>
+                  <button className="w-full text-left" onClick={() => handleClick(gptAnswer)}>
                     Все
                   </button>
                 </li>
                 <li className="w-52 p-3 rounded-lg hover:bg-lightgreen cursor-pointer">
-                  <button className="w-full text-left" onClick={handleOnlySelectedClick}>
+                  <button
+                    className="w-full text-left"
+                    onClick={() => handleClick(modifiedTodoCards)}
+                  >
                     Только отмеченные
                   </button>
                 </li>

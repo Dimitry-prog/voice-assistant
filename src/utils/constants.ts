@@ -32,23 +32,35 @@ export const LANGUAGES = {
 export const roles = [
   { roleRu: 'Дизайнер', roleEn: 'designer', count: 0 },
   { roleRu: 'Фронтендер', roleEn: 'frontend', count: 0 },
+  { roleRu: 'Бэкендер', roleEn: 'backend', count: 0 },
   { roleRu: 'Менеджер проекта', roleEn: 'projectmanager', count: 0 },
   { roleRu: 'Фулстек', roleEn: 'fullstack', count: 0 },
   { roleRu: 'Аналитик', roleEn: 'analyst', count: 0 },
   { roleRu: 'Датасаентист', roleEn: 'datascientist', count: 0 },
   { roleRu: 'QA-тестировщик', roleEn: 'QAengineer', count: 0 },
 ];
+export const BOARD_IDS = [
+  '64e0cf96ef9138ea9ebc7ff8',
+  '64e0cf96ef9138ea9ebc7ff8',
+  '64e0cf96ef9138ea9ebc7ff8',
+  '64e0cf96ef9138ea9ebc7ff8',
+  '64e0cf96ef9138ea9ebc7ff8',
+];
 
-export const LABEL_ID = {
-  frontend: '64c3ea2d53ef33a7bd91e5bf',
-  backend: '64c3ea2d53ef33a7bd91e5c8',
-  designer: '64c3ea2d53ef33a7bd91e5c2',
-  fullstack: '64c3ea2d53ef33a7bd91e5cb',
-  projectmanager: '64c3ea2d53ef33a7bd91e5d2',
-  analyst: '64c3ea2d53ef33a7bd91e5cc',
-  datascientist: '64c69f6692144f4c019648cf',
-  QAengineer: '64c69f6d375c78887872ae36',
-};
+export const LIST_NAMES = ['Done', 'Blocked', 'Review', 'Pending', 'Backlog'];
+
+export const TRELLO_LABEL_COLORS = [
+  'yellow',
+  'purple',
+  'blue',
+  'red',
+  'green',
+  'orange',
+  'black',
+  'sky',
+  'pink',
+  'lime',
+];
 export const NOTION_KEY = import.meta.env.VITE_NOTION_API_TOKEN;
 export const NOTION_BASE_URL = import.meta.env.VITE_NOTION_BASE_URL;
 export const REQUEST_NOTION_CARD_DATA = (data: NotionCardType) => ({
