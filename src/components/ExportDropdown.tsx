@@ -1,10 +1,33 @@
 import React, { useState } from 'react';
-import { createNewCard, deleteAllCards } from '../api/trelloapi';
+import { ListType } from '../types/trelloTypes';
+import {
+  deleteAllCards,
+  createLabel,
+  createCards,
+  deleteAllLabels,
+  getAllList,
+} from '../api/trelloapi';
 import { CardData } from '../types/promptTypes';
-
+import { removeDuplicateCardsByRole } from '../utils/removeDuplicateCardsByRole';
 import ExportBoardPopup from './ExportBoardPopup';
 
 import arrowDownUrl from '../images/fe_arrow-down.svg';
+const token = 'ATTA7194362b6f7b0932ece543b8574095151c8cb16379ac42860d2ae2c3e76f597c81048FFF';
+const boardIds = [
+  '64e0cf96ef9138ea9ebc7ff8',
+  '64e0cf96ef9138ea9ebc7ff8',
+  '64e0cf96ef9138ea9ebc7ff8',
+  '64e0cf96ef9138ea9ebc7ff8',
+  '64e0cf96ef9138ea9ebc7ff8',
+];
+function getRandomIdFromArray(ids: string[]): string | null {
+  if (ids.length === 0) {
+    return null;
+  }
+
+  const randomIndex = Math.floor(Math.random() * ids.length);
+  return ids[randomIndex];
+}
 
 type TodoCardProps = {
   gptAnswer: CardData[];
@@ -26,40 +49,21 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
   };
 
   const handleDropdownClick = (): void => setDropdownState({ open: !dropdownState.open });
-  const handleAllClick = async (): Promise<void> => {
-    await deleteAllCards();
-    const createdCardPromises = gptAnswer.map(async (cardData: CardData) => {
-      return createNewCard(cardData);
-    });
-    const createdBoardUrls = await Promise.all(createdCardPromises);
-    const boardUrl = createdBoardUrls.find((url) => url !== null) as string;
 
-    if (boardUrl !== undefined) {
-      setIsInfoTooltip({
-        isOpen: true,
-        successful: true,
-        text: boardUrl,
-      });
-    } else {
-      console.error('Не удалось создать карточки.');
-    }
-  };
-  const handleOnlySelectedClick = async (): Promise<void> => {
-    await deleteAllCards();
-    const createdCardPromises = modifiedTodoCards.map(async (cardData: CardData) => {
-      return createNewCard(cardData);
-    });
-    const createdBoardUrls = await Promise.all(createdCardPromises);
-    const boardUrl = createdBoardUrls.find((url) => url !== null) as string;
-
-    if (boardUrl !== undefined) {
-      setIsInfoTooltip({
-        isOpen: true,
-        successful: true,
-        text: boardUrl,
-      });
-    } else {
-      console.error('Не удалось создать карточки.');
+  const handleClick = async (cards: CardData[]): Promise<void> => {
+    const boardId = getRandomIdFromArray(boardIds);
+    if (boardId !== null) {
+      await deleteAllLabels(token, boardId);
+      const lists = await getAllList(token, boardId);
+      const backlogList = lists.find((item: ListType) => item.name === 'Backlog');
+      const roles = removeDuplicateCardsByRole(cards);
+      const labelId = await createLabel(token, boardId, roles);
+      if (backlogList) {
+        await deleteAllCards(token, backlogList.id);
+        for (const card of cards) {
+          await createCards(token, backlogList.id, labelId, card);
+        }
+      }
     }
   };
 
@@ -85,12 +89,15 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
             <div className="">
               <ul>
                 <li className="w-52 p-3 rounded-lg hover:bg-lightgreen cursor-pointer">
-                  <button className="w-full text-left" onClick={handleAllClick}>
+                  <button className="w-full text-left" onClick={() => handleClick(gptAnswer)}>
                     Все
                   </button>
                 </li>
                 <li className="w-52 p-3 rounded-lg hover:bg-lightgreen cursor-pointer">
-                  <button className="w-full text-left" onClick={handleOnlySelectedClick}>
+                  <button
+                    className="w-full text-left"
+                    onClick={() => handleClick(modifiedTodoCards)}
+                  >
                     Только отмеченные
                   </button>
                 </li>

@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import TodoCard from './TodoCard';
 import ExportDropdown from './ExportDropdown';
 import { useAppSelector } from '../hooks/reduxHooks';
+import { removeDuplicateCardsByRole } from '../utils/removeDuplicateCardsByRole';
 import Preloader from './Preloader/Preloader';
 
-import { authTrello, createNewBoard } from '../api/trelloapi';
+const LIST_NAMES = ['Done', 'Blocked', 'Review', 'Pending', 'Backlog'];
+
+import { authTrello, createBoard, createLists, createLabel, createCards } from '../api/trelloapi';
 
 type SelectedCardProps = {
   id: string;
@@ -31,25 +34,31 @@ const TodoCards = () => {
   };
   useEffect(() => {
     const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.hash.substr(1)); // Извлекаем строку после "#"
+    const params = new URLSearchParams(url.hash.substr(1));
 
-    const token = params.get('token'); // Извлекаем параметр "token"
+    const token = params.get('token');
 
     if (token) {
-      setToken(token); // Выводим токен в консоль
+      setToken(token);
     }
   }, []);
   const authClick = () => {
     authTrello();
   };
-  const exportClick = () => {
+  const exportClick = async () => {
     if (token) {
-      createNewBoard(token);
+      const boardId = await createBoard(token, 'PMAI Board');
+      const listIds = await createLists(token, boardId);
+      const roles = removeDuplicateCardsByRole(selectedCards);
+      const labelId = await createLabel(token, boardId, roles);
+      const backlogListId = listIds[LIST_NAMES.indexOf('Backlog')];
+      for (const selectedCard of selectedCards) {
+        await createCards(token, backlogListId, labelId, selectedCard);
+      }
     } else {
       console.log('Нажмите 2 кнопку');
     }
   };
-
   return (
     <>
       <div className="mb-2 mt-10 p-4 min-h-[450px] border border-gray rounded-lg">
