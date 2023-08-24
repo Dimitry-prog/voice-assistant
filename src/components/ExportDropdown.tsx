@@ -36,6 +36,7 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
     isOpen: false,
     successful: true,
     text: '',
+    link: '',
   });
   const [dropdownState, setDropdownState] = useState<{ open: boolean }>({ open: false });
 
@@ -46,12 +47,25 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
   const handleDropdownClick = (): void => setDropdownState({ open: !dropdownState.open });
 
   const handleClick = async (cards: CardData[]): Promise<void> => {
+    setIsInfoTooltip({
+      isOpen: true,
+      successful: true,
+      text: `Загрузка`,
+      link: '',
+    });
     const boardId = getRandomIdFromArray(BOARD_IDS);
     if (boardId !== null) {
       try {
         await processBoard(token, boardId, cards);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsInfoTooltip({
+          isOpen: true,
+          successful: true,
+          text: `Ссылка на доску`,
+          link: `https://trello.com/b/${boardId}`,
+        });
       }
     }
   };
