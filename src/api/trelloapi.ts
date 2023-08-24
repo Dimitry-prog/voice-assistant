@@ -4,8 +4,8 @@ import { LIST_NAMES, TRELLO_LABEL_COLORS } from '../utils/constants';
 
 const API_KEY = 'ac6d52cd851e6e0fd687ce36dda30d45';
 
-const redirectUri = 'http://localhost:5173/';
-// const redirectUri = 'https://voice-assistant-demo.netlify.app/';
+// const redirectUri = 'http://localhost:5173/';
+const redirectUri = 'https://voice-assistant-demo.netlify.app/';
 const scope = 'read,write';
 const authorizeUrl = `https://trello.com/1/authorize?response_type=code&key=${API_KEY}&scope=${scope}&redirect_uri=${redirectUri}`;
 

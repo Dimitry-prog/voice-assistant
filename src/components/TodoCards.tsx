@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TodoCard from './TodoCard';
+import ExportBoardPopup from './ExportBoardPopup';
 import ExportDropdown from './ExportDropdown';
 import { useAppSelector } from '../hooks/reduxHooks';
 import { removeDuplicateCardsByRole } from '../utils/removeDuplicateCardsByRole';
@@ -47,19 +48,47 @@ const TodoCards = () => {
     authTrello();
   };
 
+  const [isInfoTooltip, setIsInfoTooltip] = useState({
+    isOpen: false,
+    successful: true,
+    text: '',
+    link: '',
+  });
+  const closeInfoTooltip = () => {
+    setIsInfoTooltip({ ...isInfoTooltip, isOpen: false });
+  };
+
   const exportClick = async (cards: CardData[]) => {
+    let boardId;
+    setIsInfoTooltip({
+      isOpen: true,
+      successful: true,
+      text: `Загрузка`,
+      link: '',
+    });
     if (token) {
-      const boardId = await createBoard(token, 'PMAI Board');
-      const listIds = await createLists(token, boardId);
-      const roles = removeDuplicateCardsByRole(selectedCards);
-      const labelId = await createLabels(token, boardId, roles);
-      const backlogListId = listIds[LIST_NAMES.indexOf('Backlog')];
-      const createCardPromises = cards.map((card) =>
-        createCard(token, backlogListId, labelId, card)
-      );
-      await Promise.all(createCardPromises);
+      try {
+        boardId = await createBoard(token, 'PMAI Board');
+        const listIds = await createLists(token, boardId);
+        const roles = removeDuplicateCardsByRole(selectedCards);
+        const labelId = await createLabels(token, boardId, roles);
+        const backlogListId = listIds[LIST_NAMES.indexOf('Backlog')];
+        const createCardPromises = cards.map((card) =>
+          createCard(token, backlogListId, labelId, card)
+        );
+        await Promise.all(createCardPromises);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsInfoTooltip({
+          isOpen: true,
+          successful: true,
+          text: `Ссылка на доску`,
+          link: `https://trello.com/b/${boardId}`,
+        });
+      }
     } else {
-      console.log('Нажмите 2 кнопку');
+      console.log('нужна регистрация (2 кнопка)');
     }
   };
   return (
@@ -99,6 +128,7 @@ const TodoCards = () => {
           Создать у себя доску
         </button>
       </div>
+      <ExportBoardPopup status={isInfoTooltip} onClose={closeInfoTooltip} />
     </>
   );
 };

@@ -11,6 +11,7 @@ type ExportBoardPopupProps = {
     isOpen: boolean;
     successful: boolean;
     text: string;
+    link: string;
   };
 };
 
@@ -41,8 +42,8 @@ const ExportBoardPopup: React.FC<ExportBoardPopupProps> = ({ onClose, status }) 
         <h2 className="mb-6 text-2xl text-center">
           {status.successful ? 'Карточки успешно созданы' : 'Не удалось создать карточки'}
         </h2>
-        <a href={status.text} target="_blank" rel="noreferrer" className="text-center text-green">
-          Ссылка на доску в Trello
+        <a href={status.link} target="_blank" rel="noreferrer" className="text-center text-green">
+          {status.text}
         </a>
         <button
           type="button"
