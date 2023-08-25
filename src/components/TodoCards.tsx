@@ -28,6 +28,8 @@ const TodoCards = () => {
   const noParents = gptPrompt.filter((parent) => parent.parentId === null);
 
   const [selectedCards, setSelectedCards] = useState<SelectedCardProps[]>([]);
+  const [allCards, setAllCards] = useState<SelectedCardProps[]>([...gptPrompt]);
+
   const handleCheckboxChange = (id: string, isChecked: boolean) => {
     setCheckboxStates((prevState) => ({
       ...prevState,
@@ -108,13 +110,15 @@ const TodoCards = () => {
                 checkboxStates={checkboxStates}
                 selectedCards={selectedCards}
                 setSelectedCards={setSelectedCards}
+                setAllCards={setAllCards}
+                allCards={allCards}
               />
             ))}
           </ul>
         )}
       </div>
       <div className="flex mt-2 text-base">
-        <ExportDropdown gptAnswer={gptPrompt} modifiedTodoCards={selectedCards} />
+        <ExportDropdown allCards={allCards} selectedCards={selectedCards} prompts={gptPrompt} />
         <button
           onClick={authClick}
           className="inline-block w-52 mr-4 justify-between text-left bg-green p-3 hover:opacity-70 border border-gray rounded-lg"

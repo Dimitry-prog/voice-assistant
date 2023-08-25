@@ -41,10 +41,14 @@ export const roles = [
 ];
 export const BOARD_IDS = [
   '64e0cf96ef9138ea9ebc7ff8',
-  '64e0cf96ef9138ea9ebc7ff8',
-  '64e0cf96ef9138ea9ebc7ff8',
-  '64e0cf96ef9138ea9ebc7ff8',
-  '64e0cf96ef9138ea9ebc7ff8',
+  '64c3ea2d70990d681cefacac',
+  '64e0cfad0578a29e4d6f8c93',
+  '64e0cfbc3b4b5b9563950856',
+  '64e0cfc5244814f1bad4d972',
+  '64e0cfcf2c7630920e562b46',
+  '64e88e1ca79cd70ac328cf83',
+  '64e88e2462bf1b59ab1afa49',
+  '64e88e2c62ab7b0e4d14263e',
 ];
 
 export const LIST_NAMES = ['Done', 'Blocked', 'Review', 'Pending', 'Backlog'];

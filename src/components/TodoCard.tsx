@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { getStructureGPTPrompt } from '../api/promptApi';
 import { REQUEST_OPENAI_DATA } from '../utils/constants';
 import { formatedDate } from '../utils/formatedDate';
+import { v4 as uuidv4 } from 'uuid';
 
 type TodoCardProps = {
   id: string;
@@ -20,6 +21,8 @@ type TodoCardProps = {
   prompts: GPTAnswerType[];
   selectedCards: SelectedCardProps[];
   setSelectedCards: React.Dispatch<React.SetStateAction<SelectedCardProps[]>>;
+  setAllCards: React.Dispatch<React.SetStateAction<SelectedCardProps[]>>;
+  allCards: SelectedCardProps[];
 };
 type SelectedCardProps = {
   id: string;
@@ -39,6 +42,8 @@ const TodoCard = ({
   checkboxStates,
   selectedCards,
   setSelectedCards,
+  setAllCards,
+  allCards,
 }: TodoCardProps) => {
   const [parents, setParents] = useState<GPTAnswerType[]>(prompts);
   const hasChildren: GPTAnswerType[] = parents.filter((child) => child.parentId === id);
@@ -68,13 +73,33 @@ const TodoCard = ({
     );
 
     if (typeof gptAnswer.payload === 'object' && 'choices' in gptAnswer.payload) {
-      const responsePayload = JSON.parse(gptAnswer.payload.choices[0].message.content);
+      const responsePayload = JSON.parse(gptAnswer.payload.choices[0].message.content).map(
+        (parent: GPTAnswerType) => {
+          return {
+            ...parent,
+            parentId: null,
+            id: uuidv4(),
+          };
+        }
+      );
+
       if (Array.isArray(responsePayload)) {
         setParents((prevParents) => {
           const newParents: GPTAnswerType[] = responsePayload.map((prompt) => ({
             ...prompt,
             parentId: id,
           }));
+          setAllCards(
+            [...allCards, ...prevParents, ...newParents].reduce(
+              (accumulator: SelectedCardProps[], currentItem: SelectedCardProps) => {
+                if (!accumulator.some((item) => item.id === currentItem.id)) {
+                  accumulator.push(currentItem);
+                }
+                return accumulator;
+              },
+              []
+            )
+          );
           return [...prevParents, ...newParents];
         });
       }
@@ -152,6 +177,8 @@ const TodoCard = ({
               checkboxStates={checkboxStates}
               selectedCards={selectedCards}
               setSelectedCards={setSelectedCards}
+              setAllCards={setAllCards}
+              allCards={allCards}
             />
           ))}
         </ul>

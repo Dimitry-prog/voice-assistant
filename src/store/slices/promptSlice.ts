@@ -72,8 +72,6 @@ const promptSlice = createSlice({
       })
       .addCase(getGPTPrompt.fulfilled, (state, action) => {
         state.status = 'success';
-        console.log(state.gptPrompt);
-
         state.gptPrompt = JSON.parse(action.payload.choices[0].message.content).map(
           (parent: GPTAnswerType) => {
             return {
@@ -94,15 +92,7 @@ const promptSlice = createSlice({
       })
       .addCase(getStructureGPTPrompt.fulfilled, (state, action) => {
         state.gptAnswerStatus = 'success';
-        state.gptAnswer = JSON.parse(action.payload.choices[0].message.content).map(
-          (parent: GPTAnswerType) => {
-            return {
-              ...parent,
-              parentId: null,
-              id: uuidv4(),
-            };
-          }
-        );
+        state.gptAnswer = JSON.parse(action.payload.choices[0].message.content);
       })
       .addCase(getStructureGPTPrompt.rejected, (state, action) => {
         state.gptAnswerStatus = 'error';

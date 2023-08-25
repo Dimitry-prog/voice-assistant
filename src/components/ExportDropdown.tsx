@@ -25,13 +25,12 @@ function getRandomIdFromArray(ids: string[]): string | null {
 }
 
 type TodoCardProps = {
-  gptAnswer: CardData[];
-  modifiedTodoCards: CardData[];
+  allCards: CardData[];
+  selectedCards: CardData[];
+  prompts: CardData[];
 };
 
-const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
-  console.log(gptAnswer);
-
+const ExportDropdown = ({ allCards, selectedCards, prompts }: TodoCardProps) => {
   const [isInfoTooltip, setIsInfoTooltip] = useState({
     isOpen: false,
     successful: true,
@@ -118,15 +117,15 @@ const ExportDropdown = ({ gptAnswer, modifiedTodoCards }: TodoCardProps) => {
             <div className="">
               <ul>
                 <li className="w-52 p-3 rounded-lg hover:bg-lightgreen cursor-pointer">
-                  <button className="w-full text-left" onClick={() => handleClick(gptAnswer)}>
+                  <button
+                    className="w-full text-left"
+                    onClick={() => handleClick(allCards.length ? allCards : prompts)}
+                  >
                     Все
                   </button>
                 </li>
                 <li className="w-52 p-3 rounded-lg hover:bg-lightgreen cursor-pointer">
-                  <button
-                    className="w-full text-left"
-                    onClick={() => handleClick(modifiedTodoCards)}
-                  >
+                  <button className="w-full text-left" onClick={() => handleClick(selectedCards)}>
                     Только отмеченные
                   </button>
                 </li>
