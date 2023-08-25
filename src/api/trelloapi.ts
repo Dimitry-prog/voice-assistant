@@ -85,8 +85,6 @@ const deleteLabel = async (token: string, labelId: string): Promise<void> => {
 export const deleteAllLabels = async (token: string, boardId: string): Promise<void> => {
   try {
     const labels = await getLabelsFromBoard(token, boardId);
-    console.log(labels);
-
     const deletePromises = labels.map((label: LabelType) => deleteLabel(token, label.id));
     await Promise.all(deletePromises);
   } catch (error) {
@@ -135,8 +133,6 @@ export const createBoard = async (token: string, BOARD_NAME: string) => {
 };
 
 const createList = async (token: string, boardId: string, listName: string) => {
-  console.log(listName);
-
   const url = `https://api.trello.com/1/lists/?key=${API_KEY}&token=${token}&name=${listName}&idBoard=${boardId}`;
   try {
     const response = await fetch(url, {
@@ -204,8 +200,6 @@ export const createCard = async (
     start,
     idLabels: labelId,
   };
-  console.log(card);
-
   try {
     await fetch(url, {
       method: 'POST',
